@@ -1262,10 +1262,59 @@
     }
 
     function Search(map_features) {
+      let customData = {
+        'features': [],
+        'type': 'FeatureCollection'
+      };
+
+      map_features.forEach((current_item, i) => {
+        const current_props = current_item.properties;
+        const { Phase, Address, "Project Name" : project_name } = current_props;
+        
+        const project_features = getFeatureByProjectName(project_name, map_features) || {};
+        const coords = project_features.geometry.coordinates;
+
+        const dataEntry = {
+          'type': 'Feature',
+          'properties': {
+            'title': project_name
+          },
+          'geometry': {
+            'coordinates': coords,
+            'type': 'Point'
+          }
+        };
+
+        customData['features'].push(dataEntry);
+      });
+
+      function forwardGeocoder(query) {
+        const matchingFeatures = [];
+        for (const feature of customData["features"]) {
+          // Handle queries with different capitalization
+          // than the source data by calling toLowerCase().
+          if (
+          feature.properties.title
+          .toLowerCase()
+          .includes(query.toLowerCase())
+          ) {
+            // Add a tree emoji as a prefix for custom
+            // data results using carmen geojson format:
+            // https://github.com/mapbox/carmen/blob/master/carmen-geojson.md
+            feature['place_name'] = `🏠 ${feature.properties.title}`;
+            feature['center'] = feature.geometry.coordinates;
+            feature['place_type'] = ['park'];
+            matchingFeatures.push(feature);
+          }
+        }
+        return matchingFeatures;
+      }
+
       const geocoder = new MapboxGeocoder({
         accessToken: CONSTANTS.mapbox_key,
         countries: 'us',
         proximity: [-121.898395, 37.322972],
+        localGeocoder: forwardGeocoder,
         placeholder: "Search address",
       });
 
