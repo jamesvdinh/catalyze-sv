@@ -1450,6 +1450,11 @@
         if (distance > radius) {
           list_items[i].style.display = "none";
         }
+        else if (distance === 0) {
+          list_items[i].style.backgroundColor = "#def4f4";
+          list_items[i].getElementsByTagName('p')[1].innerText = "project match!";
+          count += 1;
+        }
         else {
           list_items[i].style.display = "grid";
           count += 1;
