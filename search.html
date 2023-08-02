@@ -135,11 +135,9 @@
 
             const type = document.getElementById('type');
             const type_options = `
-                <option value="2">2 mi</option>
-                <option value="5">5 mi</option>
+                <option value="Affordable Housing">Affordable Housing</option>
+                <option value="5"></option>
                 <option value="10">10 mi</option>
-                <option value="15">15 mi</option>
-                <option value="20">20 mi</option>
             `
             type.innerHTML += type_options;
             type.addEventListener(
@@ -148,9 +146,26 @@
             );
             const type_label = document.createElement('label');
             type_label.classList.add('search-label');
-            type_label.for = radius;
+            type_label.for = type;
             type_label.innerHTML = "Type";
             type.before(type_label);
+
+            const status = document.getElementById('status');
+            const status_options = `
+                <option value="In Design">In Design</option>
+                <option value="5">5 mi</option>
+                <option value="10">10 mi</option>
+            `
+            status.innerHTML += status_options;
+            status.addEventListener(
+                'change',
+                function() { if (search_input && search_input.value) {update_list(address_coords, radius.value);} }
+            );
+            const status_label = document.createElement('label');
+            status_label.classList.add('search-label');
+            status_label.for = status;
+            status_label.innerHTML = "Status";
+            status.before(status_label);
 
             // Get the geocoder results container.
             const results = document.getElementById('results');
@@ -227,7 +242,8 @@
                 }
             })
             .then(response => response.json())
-            .then(data => {                
+            .then(data => {             
+                console.log(data);   
                 data.items.forEach((current_project, i) => {
                     const project_name = current_project.projectName;
                     const project_address = current_project.projectAddress;
