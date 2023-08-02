@@ -1,0 +1,324 @@
+<!doctype html>
+<html class="no-js" lang="en">
+
+<!-- Housing Development Search Tool -->
+
+<head>
+  <meta charset="utf-8">
+  <title>Search Projects</title>
+  <meta name="description" content="Find nearby Shape SV projects in Silicon Valley">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <link rel="stylesheet" href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v5.0.0/mapbox-gl-geocoder.css" type="text/css">
+  <script src='https://unpkg.com/@turf/turf/turf.min.js'></script>
+  <script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v5.0.0/mapbox-gl-geocoder.min.js"></script>
+  <style>
+    body {
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    }
+
+    .search-container {
+        margin: auto;
+        justify-content: center;
+        text-align: center;
+        max-width: 1000px;
+    }
+
+    .heading {
+        width: 100%;
+    }
+
+    .search-menu {
+        display: flex;
+        flex-flow: row wrap;
+        margin: auto;
+        justify-content: center;
+        max-width: 1000px;
+    }
+
+    .search-filter  {
+        margin: 10px 20px;
+        min-width: 200px;
+    }
+
+    .geocoder-element {
+        width: 50%;
+    }
+
+    .search-label {
+        display: block;
+        margin-bottom: 5px;
+        line-height: 20px;
+    }
+
+    #radius {
+        height: 36px;
+    }
+
+    .project-list {
+        display: flex;
+    }
+
+    .project-coordinates {
+        display: none;
+    }
+
+    .project-entry {
+        padding: 5px 10px;
+    }
+  </style>
+</head>
+
+<body>
+    <section class="search-container">
+        <h1 class="heading">Housing Developments</h1>
+        <div class="search-menu">
+            <div class="search-filter">
+                <div id="geocoder"></div>
+            </div>
+            <div class="search-filter">
+                <select id="radius" name="radius"></select>
+            </div>
+            <div class="search-filter">
+                <select id="type" name="type"></select>
+            </div>
+            <div class="search-filter">
+                <select id="status" name="status"></select>
+            </div>
+        </div>
+        <div class="results" id="results">results</div>
+    </section>
+
+    <script>
+        const MAPBOX_KEY = 'pk.eyJ1IjoiY2F0YWx5emVzdiIsImEiOiJjazZ4d2RoN2gwa2QyM2tydnF6dG1zbjNrIn0.erXugBYot80KgmE2egMXCA';
+        
+        function search() {
+            const geocoder = new MapboxGeocoder({
+                accessToken: MAPBOX_KEY,
+                countries: 'us',
+                proximity: [-121.898395, 37.322972],
+                // localGeocoder: forwardGeocoder,
+                placeholder: "Search address",
+            });
+
+            geocoder.addTo('#geocoder');
+
+            const search_bar = document.getElementById('geocoder');
+            const search_input = search_bar.getElementsByTagName('input')[0];
+            const geocoder_label = document.createElement('label');
+            let search_enabled = false;
+            let address_coords = [0,0];
+            geocoder_label.classList.add('search-label');
+            geocoder_label.for = search_bar;
+            geocoder_label.innerHTML = "Address";
+            search_bar.before(geocoder_label);
+
+            // Radius input
+            const radius = document.getElementById('radius');
+            const options = `
+                <option value="2">2 mi</option>
+                <option value="5">5 mi</option>
+                <option value="10">10 mi</option>
+                <option value="15">15 mi</option>
+                <option value="20">20 mi</option>
+            `
+            radius.innerHTML += options;
+            radius.addEventListener(
+                'change',
+                function() { if (search_input && search_input.value) {update_list(address_coords, radius.value);} }
+            );
+            const radius_label = document.createElement('label');
+            radius_label.classList.add('search-label');
+            radius_label.for = radius;
+            radius_label.innerHTML = "Radius";
+            radius.before(radius_label);
+
+            const type = document.getElementById('type');
+            const type_options = `
+                <option value="2">2 mi</option>
+                <option value="5">5 mi</option>
+                <option value="10">10 mi</option>
+                <option value="15">15 mi</option>
+                <option value="20">20 mi</option>
+            `
+            type.innerHTML += type_options;
+            type.addEventListener(
+                'change',
+                function() { if (search_input && search_input.value) {update_list(address_coords, radius.value);} }
+            );
+            const type_label = document.createElement('label');
+            type_label.classList.add('search-label');
+            type_label.for = radius;
+            type_label.innerHTML = "Type";
+            type.before(type_label);
+
+            // Get the geocoder results container.
+            const results = document.getElementById('results');
+
+            // Add geocoder result to container.
+            geocoder.on('result', (e) => {
+                search_enabled = true;
+                const radius_val = radius.value;
+                address_coords = e.result.center;
+                results.innerText = address_coords;
+                update_list(address_coords, radius_val);
+            });
+            
+            // Clear results container when search is cleared.
+            geocoder.on('clear', () => {
+                results.innerText = '';
+            });
+
+            // let customData = {
+            //     'features': [],
+            //     'type': 'FeatureCollection'
+            // };
+            // const projectsList = document.getElementById('project-list');
+            // console.log(projectsList);
+            // const listItems = projectsList.getElementsByClassName('project-entry');
+            
+            // for (i = 0; i < listItems.length; i++) {
+            //     const project_name = listItems[i].getElementsByClassName('project-name')[0].innerText;
+            //     const coords = listItems[i].getElementsByClassName('project-coordinates')[0].innerText.split(',');
+
+            //     const dataEntry = {
+            //         'type': 'Feature',
+            //         'properties': {
+            //             'title': project_name
+            //         },
+            //         'geometry': {
+            //             'coordinates': coords,
+            //             'type': 'Point'
+            //         }
+            //     };
+            //     customData['features'].push(dataEntry);
+            // }
+
+            // function forwardGeocoder(query) {
+            //     const matchingFeatures = [];
+            //     for (const feature of customData["features"]) {
+            //     // Handle queries with different capitalization
+            //     // than the source data by calling toLowerCase().
+            //     if (
+            //     feature.properties.title
+            //     .toLowerCase()
+            //     .includes(query.toLowerCase())
+            //     ) {
+            //         // Add a tree emoji as a prefix for custom
+            //         // data results using carmen geojson format:
+            //         // https://github.com/mapbox/carmen/blob/master/carmen-geojson.md
+            //         feature['place_name'] = `🏠 ${feature.properties.title}`;
+            //         feature['center'] = feature.geometry.coordinates;
+            //         feature['place_type'] = ['park'];
+            //         matchingFeatures.push(feature);
+            //     }
+            //     }
+            //     return matchingFeatures;
+            // }
+        }
+
+        function createList() {
+            let list = document.createElement('div');
+                list.classList.add('project-list');
+                list.setAttribute('id','project-list');
+            fetch('https://alexshoor.wixsite.com/website-11/_functions/collectionItems/collectionName=Version7CSVProjects', {
+                headers: {
+                    'Accept': 'application/json'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {                
+                data.items.forEach((current_project, i) => {
+                    const project_name = current_project.projectName;
+                    const project_address = current_project.projectAddress;
+
+                    let current_item = document.createElement('div');
+                    current_item.classList.add('project-entry');
+
+                    const name = document.createElement('h3');
+                    name.textContent = project_name;
+                    name.classList.add('project-name');
+
+                    const address = document.createElement('h4');
+                    address.textContent = project_address;
+                    address.classList.add('project-address');
+
+                    const distance = document.createElement('p');
+                    distance.classList.add('project-distance');
+
+                    const coordinates = document.createElement('p');
+                    getCoordinates(project_address).then(response => {
+                        coordinates.textContent = response;
+                    });
+                    coordinates.classList.add('project-coordinates');
+
+                    current_item.append(name, address, distance, coordinates);
+                    list.append(current_item);
+                });
+                const results = document.getElementById('results');
+                results.after(list);
+            })
+        }
+
+        function getCoordinates(address) {
+            return fetch("https://api.mapbox.com/geocoding/v5/mapbox.places/" + address + ".json?proximity=-121.898395,37.322972&country=US&access_token=" + MAPBOX_KEY, {
+                headers: {
+                    'Accept': 'application/json'
+                }
+            })
+            .then(response => response.json())
+            .then(geocoderResult => {
+                return geocoderResult.features[0].center;
+            });
+        }
+
+        function update_list(result, radius) {
+            const project_list = document.getElementById('project-list');
+            const list_items = project_list.getElementsByClassName('project-entry');
+            
+            let count = 0;
+            for (i = 0; i < list_items.length; i++) {
+                const name = list_items[i].getElementsByClassName('project-name')[0].innerText;
+                const coords = list_items[i].getElementsByClassName('project-coordinates')[0].innerText.split(',');
+                const distance = find_distance(result, coords);
+
+                const distance_rounded = Math.round(distance * 10) / 10;
+                list_items[i].getElementsByClassName('project-distance')[0].innerText = distance_rounded + " mi away";
+                if (distance > radius) {
+                    list_items[i].style.display = "none";
+                }
+                else if (distance === 0) {
+                    list_items[i].style.backgroundColor = "#def4f4";
+                    list_items[i].getElementsByClassName('project-distance').innerText = "project match!";
+                    count += 1;
+                }
+                else {
+                    list_items[i].style.display = "block";
+                    count += 1;
+                }
+            }
+
+            if (count === 0) { results.innerText = "no projects found"; }
+            else { results.innerText = count + ((count === 1) ? " project found" : " projects found"); }
+
+            Array.from(list_items)
+                .sort((a, b) => a.getElementsByClassName('project-distance')[0].innerText.localeCompare(b.getElementsByClassName('project-distance')[0].innerText))
+                .forEach(item => project_list.appendChild(item));
+        }
+        function find_distance(startCoords, endCoords) {
+            const from = turf.point(startCoords);
+            const to = turf.point(endCoords);
+            const options = {units: 'miles'};
+
+            return turf.distance(from, to, options);
+            }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            createList();
+            search();
+        }, false);
+
+    </script>
+</body>
+
+</html>
