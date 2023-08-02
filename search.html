@@ -57,6 +57,9 @@
 
     .project-list {
         display: flex;
+        flex-flow: row wrap;
+        margin: auto;
+        justify-content: center;
     }
 
     .project-coordinates {
@@ -65,6 +68,7 @@
 
     .project-entry {
         padding: 5px 10px;
+        max-width: 200px;
     }
   </style>
 </head>
@@ -135,9 +139,9 @@
 
             const type = document.getElementById('type');
             const type_options = `
+                <option value="All">All</option>
                 <option value="Affordable Housing">Affordable Housing</option>
-                <option value="5"></option>
-                <option value="10">10 mi</option>
+                <option value="Mixed Use">Mixed Use</option>
             `
             type.innerHTML += type_options;
             type.addEventListener(
@@ -152,9 +156,18 @@
 
             const status = document.getElementById('status');
             const status_options = `
+                <option value="All">All</option>
                 <option value="In Design">In Design</option>
-                <option value="5">5 mi</option>
-                <option value="10">10 mi</option>
+                <option value="Completed">Completed</option>
+            `
+            const detailed_type_options = `
+                <option value="All">All</option>
+                <option value="100% Affordable">100% Affordable</option>
+                <option value="Hotel">Hotel</option>
+                <option value="Office Space">Office Space</option>
+                <option value="Residential U">Residential U</option>
+                <option value="Retail Space">Retail Space</option>
+                <option value="Some Affordable">Some Affordable</option>
             `
             status.innerHTML += status_options;
             status.addEventListener(
