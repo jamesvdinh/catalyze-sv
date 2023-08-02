@@ -39,10 +39,7 @@
     .search-filter  {
         margin: 10px 20px;
         min-width: 200px;
-    }
-
-    .geocoder-element {
-        width: 50%;
+        text-align: left;
     }
 
     .search-label {
@@ -51,7 +48,7 @@
         line-height: 20px;
     }
 
-    #radius {
+    .search-select {
         height: 36px;
     }
 
@@ -60,6 +57,7 @@
         flex-flow: row wrap;
         margin: auto;
         justify-content: center;
+        margin-top: 10px;
     }
 
     .project-coordinates {
@@ -81,13 +79,13 @@
                 <div id="geocoder"></div>
             </div>
             <div class="search-filter">
-                <select id="radius" name="radius"></select>
+                <select class="search-select" id="radius" name="radius"></select>
             </div>
             <div class="search-filter">
-                <select id="type" name="type"></select>
+                <select class="search-select" id="type" name="type"></select>
             </div>
             <div class="search-filter">
-                <select id="status" name="status"></select>
+                <select class="search-select" id="status" name="status"></select>
             </div>
         </div>
         <div class="results" id="results">results</div>
@@ -96,12 +94,56 @@
     <script>
         const MAPBOX_KEY = 'pk.eyJ1IjoiY2F0YWx5emVzdiIsImEiOiJjazZ4d2RoN2gwa2QyM2tydnF6dG1zbjNrIn0.erXugBYot80KgmE2egMXCA';
         
+        function createList() {
+            let list = document.createElement('div');
+                list.classList.add('project-list');
+                list.setAttribute('id','project-list');
+            fetch('https://alexshoor.wixsite.com/website-11/_functions/collectionItems/collectionName=Version7CSVProjects', {
+                headers: {
+                    'Accept': 'application/json'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {             
+                console.log(data);   
+                data.items.forEach((current_project, i) => {
+                    const project_name = current_project.projectName;
+                    const project_address = current_project.projectAddress;
+
+                    let current_item = document.createElement('div');
+                    current_item.classList.add('project-entry');
+
+                    const name = document.createElement('h3');
+                    name.textContent = project_name;
+                    name.classList.add('project-name');
+
+                    const address = document.createElement('h4');
+                    address.textContent = project_address;
+                    address.classList.add('project-address');
+
+                    const distance = document.createElement('p');
+                    distance.classList.add('project-distance');
+
+                    const coordinates = document.createElement('p');
+                    getCoordinates(project_address).then(response => {
+                        coordinates.textContent = response;
+                    });
+                    coordinates.classList.add('project-coordinates');
+
+                    current_item.append(name, address, distance, coordinates);
+                    list.append(current_item);
+                });
+                const results = document.getElementById('results');
+                results.after(list);
+            })
+        }
+
         function search() {
             const geocoder = new MapboxGeocoder({
                 accessToken: MAPBOX_KEY,
                 countries: 'us',
                 proximity: [-121.898395, 37.322972],
-                // localGeocoder: forwardGeocoder,
+                localGeocoder: forwardGeocoder,
                 placeholder: "Search address",
             });
 
@@ -197,96 +239,56 @@
                 results.innerText = '';
             });
 
-            // let customData = {
-            //     'features': [],
-            //     'type': 'FeatureCollection'
-            // };
-            // const projectsList = document.getElementById('project-list');
-            // console.log(projectsList);
-            // const listItems = projectsList.getElementsByClassName('project-entry');
+            let customData = {
+                'features': [],
+                'type': 'FeatureCollection'
+            };
             
-            // for (i = 0; i < listItems.length; i++) {
-            //     const project_name = listItems[i].getElementsByClassName('project-name')[0].innerText;
-            //     const coords = listItems[i].getElementsByClassName('project-coordinates')[0].innerText.split(',');
-
-            //     const dataEntry = {
-            //         'type': 'Feature',
-            //         'properties': {
-            //             'title': project_name
-            //         },
-            //         'geometry': {
-            //             'coordinates': coords,
-            //             'type': 'Point'
-            //         }
-            //     };
-            //     customData['features'].push(dataEntry);
-            // }
-
-            // function forwardGeocoder(query) {
-            //     const matchingFeatures = [];
-            //     for (const feature of customData["features"]) {
-            //     // Handle queries with different capitalization
-            //     // than the source data by calling toLowerCase().
-            //     if (
-            //     feature.properties.title
-            //     .toLowerCase()
-            //     .includes(query.toLowerCase())
-            //     ) {
-            //         // Add a tree emoji as a prefix for custom
-            //         // data results using carmen geojson format:
-            //         // https://github.com/mapbox/carmen/blob/master/carmen-geojson.md
-            //         feature['place_name'] = `🏠 ${feature.properties.title}`;
-            //         feature['center'] = feature.geometry.coordinates;
-            //         feature['place_type'] = ['park'];
-            //         matchingFeatures.push(feature);
-            //     }
-            //     }
-            //     return matchingFeatures;
-            // }
-        }
-
-        function createList() {
-            let list = document.createElement('div');
-                list.classList.add('project-list');
-                list.setAttribute('id','project-list');
             fetch('https://alexshoor.wixsite.com/website-11/_functions/collectionItems/collectionName=Version7CSVProjects', {
                 headers: {
                     'Accept': 'application/json'
                 }
             })
             .then(response => response.json())
-            .then(data => {             
-                console.log(data);   
+            .then(data => {           
                 data.items.forEach((current_project, i) => {
                     const project_name = current_project.projectName;
-                    const project_address = current_project.projectAddress;
-
-                    let current_item = document.createElement('div');
-                    current_item.classList.add('project-entry');
-
-                    const name = document.createElement('h3');
-                    name.textContent = project_name;
-                    name.classList.add('project-name');
-
-                    const address = document.createElement('h4');
-                    address.textContent = project_address;
-                    address.classList.add('project-address');
-
-                    const distance = document.createElement('p');
-                    distance.classList.add('project-distance');
-
-                    const coordinates = document.createElement('p');
-                    getCoordinates(project_address).then(response => {
-                        coordinates.textContent = response;
+                    getCoordinates(current_project.projectAddress).then(coords => {
+                        const dataEntry = {
+                        'type': 'Feature',
+                        'properties': {
+                            'title': project_name
+                        },
+                        'geometry': {
+                            'coordinates': coords,
+                            'type': 'Point'
+                        }
+                    };
+                    customData['features'].push(dataEntry);
                     });
-                    coordinates.classList.add('project-coordinates');
-
-                    current_item.append(name, address, distance, coordinates);
-                    list.append(current_item);
                 });
-                const results = document.getElementById('results');
-                results.after(list);
             })
+
+            function forwardGeocoder(query) {
+                const matchingFeatures = [];
+                for (const feature of customData["features"]) {
+                // Handle queries with different capitalization
+                // than the source data by calling toLowerCase().
+                if (
+                feature.properties.title
+                .toLowerCase()
+                .includes(query.toLowerCase())
+                ) {
+                    // Add a tree emoji as a prefix for custom
+                    // data results using carmen geojson format:
+                    // https://github.com/mapbox/carmen/blob/master/carmen-geojson.md
+                    feature['place_name'] = `🏠 ${feature.properties.title}`;
+                    feature['center'] = feature.geometry.coordinates;
+                    matchingFeatures.push(feature);
+                }
+                }
+                return matchingFeatures;
+            }
         }
 
         function getCoordinates(address) {
@@ -334,6 +336,7 @@
                 .sort((a, b) => a.getElementsByClassName('project-distance')[0].innerText.localeCompare(b.getElementsByClassName('project-distance')[0].innerText))
                 .forEach(item => project_list.appendChild(item));
         }
+
         function find_distance(startCoords, endCoords) {
             const from = turf.point(startCoords);
             const to = turf.point(endCoords);
