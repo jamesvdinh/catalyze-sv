@@ -60,6 +60,19 @@
         margin-top: 10px;
     }
 
+    .text-container {
+        padding: 0 5px;
+        max-width: 200px;
+    }
+
+    .project-img {
+        max-height: 100px;
+    }
+
+    .project-feedbackNeeded {
+        font-size: 12px;
+    }
+
     .project-coordinates {
         display: none;
     }
@@ -67,8 +80,10 @@
     .project-entry {
         padding: 5px 10px;
         margin: 5px;
-        max-width: 200px;
+        max-width: 450px;
         border: 1px solid black;
+        display: flex;
+        flex-flow: row;
     }
   </style>
 </head>
@@ -109,13 +124,27 @@
             .then(data => {             
                 console.log(data);   
                 data.items.forEach((current_project, i) => {
+                    const project_img = current_project.genericImage;
+                    const project_feedbackNeeded = current_project.feedbackNeeded;
                     const project_name = current_project.projectName;
                     const project_address = current_project.projectAddress;
                     const project_type = current_project["projectType(Select 1)"];
                     const project_status = current_project.currentStatus;
+                    const project_city = current_project.city;
 
                     let current_item = document.createElement('div');
                     current_item.classList.add('project-entry');
+
+                    const text_container = document.createElement('div');
+                    text_container.classList.add('text-container');
+
+                    const img = document.createElement('img');
+                    img.src = project_img;
+                    img.classList.add('project-img');
+
+                    const feedbackNeeded = document.createElement('p');
+                    feedbackNeeded.textContent = [project_feedbackNeeded];
+                    feedbackNeeded.classList.add('project-feedbackNeeded');
 
                     const name = document.createElement('h3');
                     name.textContent = project_name;
@@ -124,6 +153,10 @@
                     const address = document.createElement('h4');
                     address.textContent = project_address;
                     address.classList.add('project-address');
+
+                    const city = document.createElement('p');
+                    city.textContent = project_city;
+                    city.classList.add('project-city');
 
                     const type = document.createElement('p');
                     type.textContent = project_type;
@@ -142,7 +175,9 @@
                     });
                     coordinates.classList.add('project-coordinates');
 
-                    current_item.append(name, address, distance, type, status, coordinates);
+                    text_container.append(feedbackNeeded, name, address, city, distance, type, status, coordinates);
+
+                    current_item.append(img, text_container);
                     list.append(current_item);
                 });
                 const results = document.getElementById('results');
