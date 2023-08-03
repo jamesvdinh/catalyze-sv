@@ -174,6 +174,7 @@
             // Radius input
             const radius = document.getElementById('radius');
             const options = `
+                <option value="All">All</option>
                 <option value="2">2 mi</option>
                 <option value="5">5 mi</option>
                 <option value="10">10 mi</option>
@@ -183,7 +184,7 @@
             radius.innerHTML += options;
             radius.addEventListener(
                 'change',
-                function() { if (search_input && search_input.value) {update_list(address_coords, radius.value);} }
+                function() { if (search_input && search_input.value) {update_list(address_coords, radius.value, type.value, status.value);} }
             );
             const radius_label = document.createElement('label');
             radius_label.classList.add('search-label');
@@ -195,13 +196,10 @@
             const type_options = `
                 <option value="All">All</option>
                 <option value="Affordable Housing">Affordable Housing</option>
+                <option value="Commercial Retail">Commercial Retail</option>
                 <option value="Mixed Use">Mixed Use</option>
             `
             type.innerHTML += type_options;
-            type.addEventListener(
-                'change',
-                function() { if (search_input && search_input.value) {update_list(address_coords, radius.value);} }
-            );
             const type_label = document.createElement('label');
             type_label.classList.add('search-label');
             type_label.for = type;
@@ -224,16 +222,24 @@
                 <option value="Some Affordable">Some Affordable</option>
             `
             status.innerHTML += status_options;
-            status.addEventListener(
-                'change',
-                function() { if (search_input && search_input.value) {update_list(address_coords, radius.value);} }
-            );
             const status_label = document.createElement('label');
             status_label.classList.add('search-label');
             status_label.for = status;
             status_label.innerHTML = "Status";
             status.before(status_label);
 
+            radius.addEventListener(
+                'change',
+                function() { if (search_input && search_input.value) {update_list(address_coords, radius.value, type.value, status.value);} }
+            );
+            type.addEventListener(
+                'change',
+                function() { if (search_input && search_input.value) {update_list(address_coords, radius.value, type.value, status.value);} }
+            );
+            status.addEventListener(
+                'change',
+                function() { if (search_input && search_input.value) {update_list(address_coords, radius.value, type.value, status.value);} }
+            );
             // Get the geocoder results container.
             const results = document.getElementById('results');
 
@@ -243,12 +249,13 @@
                 const radius_val = radius.value;
                 address_coords = e.result.center;
                 results.innerText = address_coords;
-                update_list(address_coords, radius_val);
+                update_list(address_coords, radius_val, type.value, status.value);
             });
             
             // Clear results container when search is cleared.
             geocoder.on('clear', () => {
                 results.innerText = '';
+                restore_list();
             });
 
             let customData = {
@@ -315,7 +322,7 @@
             });
         }
 
-        function update_list(result, radius) {
+        function update_list(result, radius, type, status) {
             const project_list = document.getElementById('project-list');
             const list_items = project_list.getElementsByClassName('project-entry');
             
@@ -323,11 +330,14 @@
             for (i = 0; i < list_items.length; i++) {
                 const name = list_items[i].getElementsByClassName('project-name')[0].innerText;
                 const coords = list_items[i].getElementsByClassName('project-coordinates')[0].innerText.split(',');
+                const project_type = list_items[i].getElementsByClassName('project-type')[0].innerText;
+                const project_status = list_items[i].getElementsByClassName('project-status')[0].innerText;
+
                 const distance = find_distance(result, coords);
 
                 const distance_rounded = Math.round(distance * 10) / 10;
                 list_items[i].getElementsByClassName('project-distance')[0].innerText = distance_rounded + " mi away";
-                if (distance > radius) {
+                if ((radius !== "All" ? (distance > radius) : "") || (type !== "All" ? (project_type !== type) : "") || (status !== "All" ? (project_status !== status) : "")) {
                     list_items[i].style.display = "none";
                 }
                 else if (distance === 0) {
@@ -347,6 +357,16 @@
             Array.from(list_items)
                 .sort((a, b) => a.getElementsByClassName('project-distance')[0].innerText.localeCompare(b.getElementsByClassName('project-distance')[0].innerText))
                 .forEach(item => project_list.appendChild(item));
+        }
+
+        function restore_list() {
+            const project_list = document.getElementById('project-list');
+            const list_items = project_list.getElementsByClassName('project-entry');
+
+            for (i = 0; i < list_items.length; i++) {
+                list_items[i].style.display = "block";
+                list_items[i].getElementsByClassName('project-distance')[0].innerText = "";
+            }
         }
 
         function find_distance(startCoords, endCoords) {
