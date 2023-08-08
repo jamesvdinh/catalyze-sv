@@ -61,7 +61,7 @@
     }
 
     .text-container {
-        padding: 0 5px;
+        padding: 0 10px 10px;
         max-width: 200px;
     }
 
@@ -73,12 +73,19 @@
         font-size: 12px;
     }
 
+    .project-link {
+        text-decoration: none;
+        padding: 8px 18px;
+        background-color: rgb(87, 87, 87);
+        color: rgb(149, 176, 186);
+    }
+
     .project-coordinates {
         display: none;
     }
 
     .project-entry {
-        padding: 5px 10px;
+        padding: 7px 10px;
         margin: 5px;
         max-width: 450px;
         border: 1px solid black;
@@ -105,16 +112,17 @@
                 <select class="search-select" id="status" name="status"></select>
             </div>
         </div>
-        <div class="results" id="results">results</div>
+        <div class="results" id="results"></div>
     </section>
 
     <script>
         const MAPBOX_KEY = 'pk.eyJ1IjoiY2F0YWx5emVzdiIsImEiOiJjazZ4d2RoN2gwa2QyM2tydnF6dG1zbjNrIn0.erXugBYot80KgmE2egMXCA';
+        let totalProjectNum = 0;
         
         function createList() {
             let list = document.createElement('div');
-                list.classList.add('project-list');
-                list.setAttribute('id','project-list');
+            list.classList.add('project-list');
+            list.setAttribute('id','project-list');
             fetch('https://alexshoor.wixsite.com/shapesvalpha/_functions/collectionItems/collectionName=Version7CSVProjects', {
                 headers: {
                     'Accept': 'application/json'
@@ -131,6 +139,8 @@
                     const project_type = current_project["projectType(Select 1)"];
                     const project_status = current_project.currentStatus;
                     const project_city = current_project.city;
+                    const project_link = current_project.catalyzeSVPage;
+                    const project_numFeedbacks = current_project["numberofFeedbacks(Internal)"];
 
                     let current_item = document.createElement('div');
                     current_item.classList.add('project-entry');
@@ -169,13 +179,22 @@
                     const distance = document.createElement('p');
                     distance.classList.add('project-distance');
 
+                    const link = document.createElement('a');
+                    link.textContent = "More";
+                    link.href = project_link;
+                    link.classList.add('project-link');
+
+                    const numFeedbacks = document.createElement('p');
+                    numFeedbacks.textContent = project_numFeedbacks;
+                    numFeedbacks.classList.add('project-numFeedbacks');
+
                     const coordinates = document.createElement('p');
                     getCoordinates(project_address).then(response => {
                         coordinates.textContent = response;
                     });
                     coordinates.classList.add('project-coordinates');
 
-                    text_container.append(feedbackNeeded, name, address, city, distance, type, status, coordinates);
+                    text_container.append(feedbackNeeded, name, city, distance, numFeedbacks, link, coordinates);
 
                     current_item.append(img, text_container);
                     list.append(current_item);
@@ -276,14 +295,13 @@
                 function() { if (search_input && search_input.value) {update_list(address_coords, radius.value, type.value, status.value);} }
             );
             // Get the geocoder results container.
-            const results = document.getElementById('results');
+            let results = document.getElementById('results');
 
             // Add geocoder result to container.
             geocoder.on('result', (e) => {
                 search_enabled = true;
                 const radius_val = radius.value;
                 address_coords = e.result.center;
-                results.innerText = address_coords;
                 update_list(address_coords, radius_val, type.value, status.value);
             });
             
@@ -321,6 +339,8 @@
                     customData['features'].push(dataEntry);
                     });
                 });
+                totalProjectNum = data.items.length;
+                results.innerText = totalProjectNum + " total projects";
             })
 
             function forwardGeocoder(query) {
@@ -397,6 +417,9 @@
         function restore_list() {
             const project_list = document.getElementById('project-list');
             const list_items = project_list.getElementsByClassName('project-entry');
+            const results = document.getElementById('results');
+
+            results.innerText = totalProjectNum + " total projects";
 
             for (i = 0; i < list_items.length; i++) {
                 list_items[i].style.display = "block";
