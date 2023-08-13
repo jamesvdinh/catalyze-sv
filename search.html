@@ -130,7 +130,6 @@
             })
             .then(response => response.json())
             .then(data => {             
-                console.log(data);   
                 data.items.forEach((current_project, i) => {
                     const project_img = current_project.genericImage;
                     const project_feedbackNeeded = current_project.feedbackNeeded;
@@ -139,7 +138,7 @@
                     const project_type = current_project["projectType(Select 1)"];
                     const project_status = current_project.currentStatus;
                     const project_city = current_project.city;
-                    const project_link = current_project.catalyzeSVPage;
+                    const project_link = current_project["link-version7csvprojects-projectName"];
                     const project_numFeedbacks = current_project["numberofFeedbacks(Internal)"];
 
                     let current_item = document.createElement('div');
@@ -201,6 +200,16 @@
                 });
                 const results = document.getElementById('results');
                 results.after(list);
+            }).then(() => {
+            	document
+              .querySelector(".project-list")
+              .addEventListener("click", (e) => {
+                if (e.target.classList.contains("project-link")) {
+                  e.preventDefault();
+                  const projectLink = e.target.getAttribute("href");
+                  window.parent.postMessage(projectLink, "https://alexshoor.wixsite.com");
+                }
+              });
             })
         }
 
