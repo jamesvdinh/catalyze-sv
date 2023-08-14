@@ -38,7 +38,7 @@
 
     .search-filter  {
         margin: 10px 20px;
-        min-width: 200px;
+        min-width: 150px;
         text-align: left;
     }
 
@@ -62,7 +62,6 @@
 
     .text-container {
         padding: 0 10px 10px;
-        max-width: 200px;
     }
 
     .project-img {
@@ -80,14 +79,14 @@
         color: rgb(149, 176, 186);
     }
 
-    .project-coordinates {
+    .project-coordinates, .project-type, .project-status {
         display: none;
     }
 
     .project-entry {
         padding: 7px 10px;
         margin: 5px;
-        max-width: 450px;
+        width: 300px;
         border: 1px solid black;
         display: flex;
         flex-flow: row;
@@ -193,7 +192,7 @@
                     });
                     coordinates.classList.add('project-coordinates');
 
-                    text_container.append(feedbackNeeded, name, city, distance, numFeedbacks, link, coordinates);
+                    text_container.append(feedbackNeeded, name, city, distance, numFeedbacks, link, type, status, coordinates);
 
                     current_item.append(img, text_container);
                     list.append(current_item);
@@ -297,11 +296,11 @@
             );
             type.addEventListener(
                 'change',
-                function() { if (search_input && search_input.value) {update_list(address_coords, radius.value, type.value, status.value);} }
+                function() { update_list(address_coords, radius.value, type.value, status.value); }
             );
             status.addEventListener(
                 'change',
-                function() { if (search_input && search_input.value) {update_list(address_coords, radius.value, type.value, status.value);} }
+                function() { update_list(address_coords, radius.value, type.value, status.value); }
             );
             // Get the geocoder results container.
             let results = document.getElementById('results');
@@ -401,7 +400,9 @@
 
                 const distance_rounded = Math.round(distance * 10) / 10;
                 list_items[i].getElementsByClassName('project-distance')[0].innerText = distance_rounded + " mi away";
-                if ((radius !== "All" ? (distance > radius) : "") || (type !== "All" ? (project_type !== type) : "") || (status !== "All" ? (project_status !== status) : "")) {
+                if ((radius !== "All" ? (distance > radius) : "") 
+                    || (type !== "All" ? (project_type !== type) : "") 
+                    || (status !== "All" ? (project_status !== status) : "")) {
                     list_items[i].style.display = "none";
                 }
                 else if (distance === 0) {
