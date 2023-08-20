@@ -597,8 +597,7 @@
                 }
             }
 
-            if (count === 0) { results.innerText = `Active Projects (${totalProjectNum})`; }
-            else { results.innerText = `Active Projects (${totalProjectNum})`; }
+            results.innerText = `Active Projects (${count})`;
 
             Array.from(list_items)
                 .sort((a, b) => a.getElementsByClassName('project-distance')[0].innerText.localeCompare(b.getElementsByClassName('project-distance')[0].innerText))
