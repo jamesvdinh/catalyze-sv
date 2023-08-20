@@ -115,9 +115,7 @@
 
     .project-link {
         text-decoration: none;
-        padding: 5px 15px;
-        background-color: rgb(142, 142, 142);
-        color: rgb(197, 233, 246);
+        color: black;
     }
 
     .project-coordinates, .project-type, .project-status {
@@ -329,9 +327,13 @@
                     feedbackNeeded.textContent = [project_feedbackNeeded];
                     feedbackNeeded.classList.add('project-feedbackNeeded');
 
+                    const nameLink = document.createElement('a');
+                    nameLink.href = project_link;
+                    nameLink.classList.add('project-link');
                     const name = document.createElement('h3');
                     name.textContent = `Project Title: ${project_name}`;
                     name.classList.add('project-name');
+                    nameLink.append(name);
 
                     const address = document.createElement('h4');
                     address.textContent = project_address;
@@ -354,11 +356,6 @@
 
                     const distance = document.createElement('p');
                     distance.classList.add('project-distance');
-
-                    const link = document.createElement('a');
-                    link.textContent = "More";
-                    link.href = project_link;
-                    link.classList.add('project-link');
 
                     const desc = document.createElement('p');
                     desc.textContent = project_desc;
@@ -396,7 +393,7 @@
                     });
                     coordinates.classList.add('project-coordinates');
 
-                    text_container.append(feedbackNeeded, name, city, desc, distance, quantity_container, type, status, coordinates);
+                    text_container.append(feedbackNeeded, nameLink, city, desc, distance, quantity_container, type, status, coordinates);
 
                     current_item.append(img, text_container);
                     list.append(current_item);
