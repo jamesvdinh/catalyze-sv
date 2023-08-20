@@ -87,7 +87,8 @@
     }
 
     .project-img {
-        max-height: 100px;
+        max-height: 180px;
+        object-fit: cover;
         width: 100%;
     }
 
@@ -126,6 +127,7 @@
         flex-flow: column wrap;
         text-align: left;
         border-radius: 10px;
+        overflow: hidden;
     }
 
     .results {
@@ -468,7 +470,7 @@
                     });
                 });
                 totalProjectNum = data.items.length;
-                results.innerText = totalProjectNum + " total projects";
+                results.innerText = `Active Projects (${totalProjectNum})`;
             })
 
             function forwardGeocoder(query) {
@@ -542,8 +544,8 @@
                 }
             }
 
-            if (count === 0) { results.innerText = "no projects found"; }
-            else { results.innerText = count + ((count === 1) ? " project found" : " projects found"); }
+            if (count === 0) { results.innerText = `Active Projects (${totalProjectNum})`; }
+            else { results.innerText = `Active Projects (${totalProjectNum})`; }
 
             Array.from(list_items)
                 .sort((a, b) => a.getElementsByClassName('project-distance')[0].innerText.localeCompare(b.getElementsByClassName('project-distance')[0].innerText))
@@ -555,7 +557,7 @@
             const list_items = project_list.getElementsByClassName('project-entry');
             const results = document.getElementById('results');
 
-            results.innerText = totalProjectNum + " total projects";
+            results.innerText = `Active Projects (${totalProjectNum})`;
 
             for (i = 0; i < list_items.length; i++) {
                 list_items[i].style.display = "block";
