@@ -29,7 +29,7 @@
 
     .heading {
         width: 100%;
-        margin: 20px 0 5px;
+        margin: 20px 0;
     }
 
     .subtitle {
@@ -68,7 +68,7 @@
         display: flex;
         flex-flow: row wrap;
         margin: auto;
-        justify-content: left;
+        justify-content: center;
         margin-top: 10px;
     }
 
@@ -277,7 +277,7 @@
                 <select class="search-select" id="status" name="status"></select>
             </div>
             <div class="user-buttons">
-                <button class="submit-button" id="submit-button" onclick="update_list()">Search</button>
+                <button class="submit-button" id="submit-button" onclick="update_list()" disabled>Search</button>
                 <button class="clear-filters" onclick="resetFilters(); restore_list()">
                     <svg width="12px" height="12px" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" stroke-width="3" stroke="#000000" fill="none"><path d="M53.72,36.61A21.91,21.91,0,1,1,50.37,20.1"/><polyline points="51.72 7.85 50.85 20.78 37.92 19.9"/><path d="M53.72,36.61A21.91,21.91,0,1,1,50.37,20.1"/><polyline points="51.72 7.85 50.85 20.78 37.92 19.9"/></svg>
                     <span class="clear-filters-text" id=".clear-filters-text">clear all filters</span>
@@ -440,11 +440,11 @@
             const options = `
                 <option value="" disabled selected>Radius</option>
                 <option value="All">All</option>
-                <option value="2">2 mi</option>
                 <option value="5">5 mi</option>
                 <option value="10">10 mi</option>
                 <option value="15">15 mi</option>
                 <option value="20">20 mi</option>
+                <option value="25">25 mi</option>
             `
             radius.innerHTML += options;
 
@@ -470,18 +470,18 @@
 
             status.innerHTML += status_options;
 
-            // radius.addEventListener(
-            //     'change',
-            //     function() { if (search_input && search_input.value) {update_list();} }
-            // );
-            // type.addEventListener(
-            //     'change',
-            //     function() { update_list(); }
-            // );
-            // status.addEventListener(
-            //     'change',
-            //     function() { update_list(); }
-            // );
+            radius.addEventListener(
+                'change',
+                function() { checkFilled(); }
+            );
+            type.addEventListener(
+                'change',
+                function() { checkFilled(); }
+            );
+            status.addEventListener(
+                'change',
+                function() { checkFilled(); }
+            );
             // Get the geocoder results container.
             let results = document.getElementById('results');
 
@@ -492,6 +492,7 @@
                 address_coords = e.result.center;
                 addressCoordinates = address_coords;
                 radius.disabled = false;
+                checkFilled();
             });
             
             // Clear results container when search is cleared.
@@ -620,8 +621,10 @@
 
             for (i = 0; i < list_items.length; i++) {
                 list_items[i].style.display = "block";
+                list_items[i].style.backgroundColor = "unset";
                 list_items[i].getElementsByClassName('project-distance')[0].innerText = "";
             }
+            checkFilled();
         }
 
         function find_distance(startCoords, endCoords) {
@@ -647,6 +650,33 @@
                 document.getElementById(id).value = "";
             })
             document.getElementsByClassName('mapboxgl-ctrl-geocoder--input')[0].value = "";
+        }
+
+        function checkFilled() {
+            let isFilled = true;
+            const inputElementIDs = [
+                'radius',
+                'type',
+                'status'
+            ]
+
+            if (document.getElementsByClassName('mapboxgl-ctrl-geocoder--input')[0].value === "") {
+                isFilled = false;
+            };
+
+            inputElementIDs.map(id => {
+                if (document.getElementById(id).value === "") {
+                    isFilled = false;
+                }
+            })
+
+            if (isFilled) {
+                document.getElementById('submit-button').disabled = false;
+            }
+            else {
+                document.getElementById('submit-button').disabled = true;
+                return;
+            }
         }
 
     </script>
