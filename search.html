@@ -24,7 +24,7 @@
         padding: 0 20px;
         justify-content: center;
         text-align: center;
-        max-width: 1100px;
+        max-width: 980px;
     }
 
     .heading {
@@ -113,9 +113,18 @@
         margin: 0;
     }
 
+    .project-link-a {
+        text-decoration: none;
+        color: rgb(66, 142, 205);
+    }
+
     .project-link {
         text-decoration: none;
         color: black;
+        background-color: orangered;
+        padding: 7px 16px;
+        border-radius: 50px;
+        color: white;
     }
 
     .project-coordinates, .project-type, .project-status {
@@ -124,8 +133,8 @@
 
     .project-entry {
         position: relative;
-        margin: 5px;
-        max-width: 355px;
+        margin: 20px 5px;
+        max-width: 310px;
         /* border: 1px solid black; */
         display: flex;
         flex-flow: column wrap;
@@ -139,7 +148,7 @@
         border-radius: 50px;
         box-shadow: unset;
         border: 1px solid black;
-        width: 300px;
+        min-width: 280px;
         height: 36px;
     }
     .mapboxgl-ctrl-geocoder--input:focus {
@@ -244,19 +253,22 @@
         margin-right: 3px;
         font-weight: bold;
     }
+
+    .project-desc {
+        height: 105px;
+    }
   </style>
 </head>
 
 <body>
     <section class="search-container">
         <h1 class="heading">Housing Developments</h1>
-        <p class="subtitle">stars indicate number of feedbacks</p>
         <div class="search-menu">
             <div class="search-filter">
                 <div id="geocoder"></div>
             </div>
             <div class="search-filter">
-                <select class="search-select" id="radius" name="radius"></select>
+                <select class="search-select" id="radius" name="radius" disabled></select>
             </div>
             <div class="search-filter">
                 <select class="search-select" id="type" name="type"></select>
@@ -311,7 +323,7 @@
                     const project_link = current_project["link-version7csvprojects-projectName"];
                     const project_numFeedbacks = current_project["numberofFeedbacks(Internal)"];
                     const project_desc = current_project.highlight1;
-                    const project_numParticipants = current_project.zipcode;
+                    const project_numParticipants = current_project["numberofFeedbacks(Internal)"];
 
                     let current_item = document.createElement('div');
                     current_item.classList.add('project-entry');
@@ -329,9 +341,9 @@
 
                     const nameLink = document.createElement('a');
                     nameLink.href = project_link;
-                    nameLink.classList.add('project-link');
+                    nameLink.classList.add('project-link-a');
                     const name = document.createElement('h3');
-                    name.textContent = `Project Title: ${project_name}`;
+                    name.textContent = `${project_name}`;
                     name.classList.add('project-name');
                     nameLink.append(name);
 
@@ -374,18 +386,12 @@
                     numFeedbacks.append(numFeedbacksText);
                     numFeedbacks.classList.add('project-numFeedbacks');
 
-                    const numParticipants = document.createElement('div');
-                    numParticipants.classList.add('icon-container');
-                    const numParticipantsText = document.createElement('span');
-                    numParticipantsText.innerHTML = project_numParticipants + " participants";
-                    numParticipants.innerHTML = `<svg class="inline-svg" width="15px" height="15px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M8 13H16M8 13V18C8 19.8856 8 20.8284 8.58579 21.4142C9.17157 22 10.1144 22 12 22C13.8856 22 14.8284 22 15.4142 21.4142C16 20.8284 16 19.8856 16 18V13M8 13C5.2421 12.3871 3.06717 10.2687 2.38197 7.52787L2 6M16 13C17.7107 13 19.1506 14.2804 19.3505 15.9795L20 21.5" stroke="#1C274C" stroke-width="1.5" stroke-linecap="round"/>
-                        <circle cx="12" cy="6" r="4" stroke="#1C274C" stroke-width="1.5"/>
-                        </svg>`;
-                        numParticipants.append(numParticipantsText);
-                    numParticipants.classList.add('project-numParticipants');
+                    const link = document.createElement('a');
+                    link.textContent = "More";
+                    link.href = project_link;
+                    link.classList.add('project-link');
 
-                    quantity_container.append(numParticipants, numFeedbacks);
+                    quantity_container.append(link, numFeedbacks);
 
                     const coordinates = document.createElement('p');
                     getCoordinates(project_address).then(response => {
@@ -485,6 +491,7 @@
                 const radius_val = radius.value;
                 address_coords = e.result.center;
                 addressCoordinates = address_coords;
+                radius.disabled = false;
             });
             
             // Clear results container when search is cleared.
@@ -605,6 +612,9 @@
             const project_list = document.getElementById('project-list');
             const list_items = project_list.getElementsByClassName('project-entry');
             const results = document.getElementById('results');
+            const radius = document.getElementById('radius');
+
+            radius.disabled = true;
 
             results.innerText = `Active Projects (${totalProjectNum})`;
 
