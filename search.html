@@ -49,10 +49,11 @@
     }
 
     .search-filter select {
-        width: 80px;
+        width: 85px;
         border-radius: 50px;
         padding-left: 10px;
         color: rgb(132, 132, 132);
+        font-size: 16px;
     }
 
     .search-filter select:hover, .search-filter select:focus {
@@ -77,7 +78,12 @@
         text-align: left;
     }
 
-    .project-name, .project-city {
+    .project-name {
+        margin: 5px 0;
+        color: #0D4197;
+    }
+
+    .project-city {
         margin: 5px 0;
     }
 
@@ -122,9 +128,17 @@
         text-decoration: none;
         color: black;
         background-color: orangered;
-        padding: 7px 16px;
+        padding: 7px 30px;
         border-radius: 50px;
         color: white;
+        text-align: center;
+        border: unset;
+        font-size: 16px;
+    }
+
+    .project-link:hover {
+        filter: brightness(0.9);
+        transition: all 0.2s;
     }
 
     .project-coordinates, .project-type, .project-status {
@@ -135,7 +149,6 @@
         position: relative;
         margin: 20px 5px;
         max-width: 310px;
-        /* border: 1px solid black; */
         display: flex;
         flex-flow: column wrap;
         text-align: left;
@@ -156,8 +169,11 @@
     }
     .mapboxgl-ctrl-geocoder--input {
         color: unset;
-        font-size: 14px;
-        height: 36px;
+        font-size: 16px;
+        height: 33px;
+    }
+    .mapboxgl-ctrl-geocoder--input::placeholder {
+        font-size: 16px;
     }
     .mapboxgl-ctrl-geocoder--icon {
         top: 7px;
@@ -176,13 +192,14 @@
     .submit-button {
         margin: 10px 7px 3px;
         text-align: center;
+        padding: 7px 30px;
         border-radius: 50px;
-        width: 110px;
         background-color: orangered;
         border: unset;
         color: white;
         cursor: pointer;
         height: 36px;
+        font-size: 16px;
     }
 
     .submit-button:hover {
@@ -192,7 +209,7 @@
 
     .user-buttons {
         display: flex;
-        flex-flow: column wrap;
+        flex-flow: row nowrap;
         margin: none;
     }
 
@@ -228,30 +245,9 @@
         margin-right: 2px;
     }
 
-    .results-container {
-        display: flex;
-        flex-flow: row nowrap;
-        justify-content: space-between;
-        font-weight: bold;
-        margin: 0 5px;
-    }
-
     .results {
         text-align: left;
         font-size: 16px;
-    }
-
-    .sort-filter {
-        border: unset;
-        background-color: unset;
-        cursor: pointer;
-    }
-
-    .sort-filter-text {
-        font-size: 16px;
-        padding: 0;
-        margin-right: 3px;
-        font-weight: bold;
     }
 
     .project-desc {
@@ -262,7 +258,6 @@
 
 <body>
     <section class="search-container">
-        <h1 class="heading">Housing Developments</h1>
         <div class="search-menu">
             <div class="search-filter">
                 <div id="geocoder"></div>
@@ -284,15 +279,7 @@
                 </button>
             </div>
         </div>
-        <div class="results-container" id="results-container">
-            <div class="results" id="results"></div>
-            <button class="sort-filter icon-container">
-                <span class="sort-filter-text">Sort</span>
-                <svg width="20px" height="20px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M7 10L12 15L17 10" stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
-            </button>
-        </div>
+        <div class="results" id="results"></div>
     </section>
     <script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v5.0.0/mapbox-gl-geocoder.min.js"></script>
 
@@ -404,8 +391,12 @@
                     current_item.append(img, text_container);
                     list.append(current_item);
                 });
-                const results = document.getElementById('results-container');
+                const results = document.getElementById('results');
                 results.after(list);
+                const list_items = list.getElementsByClassName('project-entry');
+                Array.from(list_items)
+                    .sort((a, b) => a.getElementsByClassName('project-name')[0].textContent.localeCompare(b.getElementsByClassName('project-name')[0].textContent))
+                    .forEach(item => list.appendChild(item));
             }).then(() => {
             	document
               .querySelector(".project-list")
@@ -546,7 +537,7 @@
                     // Add a tree emoji as a prefix for custom
                     // data results using carmen geojson format:
                     // https://github.com/mapbox/carmen/blob/master/carmen-geojson.md
-                    feature['place_name'] = `🏠 ${feature.properties.title}`;
+                    feature['place_name'] = `✅ ${feature.properties.title}`;
                     feature['center'] = feature.geometry.coordinates;
                     matchingFeatures.push(feature);
                 }
@@ -622,7 +613,8 @@
             for (i = 0; i < list_items.length; i++) {
                 list_items[i].style.display = "block";
                 list_items[i].style.backgroundColor = "unset";
-                list_items[i].getElementsByClassName('project-distance')[0].innerText = "";
+                // list_items[i].getElementsByClassName('project-distance')[0].innerText = "";
+                list_items[i].getElementsByClassName('project-distance')[0].display = "none";
             }
             checkFilled();
         }
