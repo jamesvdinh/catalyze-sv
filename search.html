@@ -39,7 +39,7 @@
     .search-menu {
         display: flex;
         flex-flow: row wrap;
-        margin: 0 auto 10px;
+        margin: 0 auto 20px;
         justify-content: left;
     }
 
@@ -69,8 +69,7 @@
         display: flex;
         flex-flow: row wrap;
         margin: auto;
-        justify-content: center;
-        margin-top: 10px;
+        justify-content: left;
     }
 
     .text-container {
@@ -155,7 +154,7 @@
 
     .project-entry {
         position: relative;
-        margin: 20px 5px;
+        margin: 15px 5px;
         max-width: 310px;
         display: flex;
         flex-flow: column wrap;
@@ -180,6 +179,7 @@
     .mapboxgl-ctrl-geocoder--input {
         color: unset;
         font-size: 16px;
+        height: unset;
     }
     .mapboxgl-ctrl-geocoder--input::placeholder {
         font-size: 16px;
@@ -199,7 +199,7 @@
         }
     }
     .submit-button {
-        margin: 10px 7px 3px;
+        margin: 0 5px;
         text-align: center;
         padding: 7px 30px;
         border-radius: 50px;
@@ -219,7 +219,8 @@
     .user-buttons {
         display: flex;
         flex-flow: row nowrap;
-        margin: none;
+        margin: 0;
+        align-items: center;
     }
 
     .clear-filters {
@@ -573,6 +574,10 @@
             const project_list = document.getElementById('project-list');
             const list_items = project_list.getElementsByClassName('project-entry');
             const result = addressCoordinates;
+            const search_result = document.getElementsByClassName('mapboxgl-ctrl-geocoder--input')[0].value;
+            if (search_result.includes('✅')) {
+                search_result = search_result.substring(0, search_result.lastIndexOf(" ")); // removes the ✅ after the search result
+            }
             const radius = document.getElementById('radius').value;
             const type = document.getElementById('type').value;
             const status = document.getElementById('status').value;
@@ -587,15 +592,16 @@
                 const distance = find_distance(result, coords);
 
                 const distance_rounded = Math.round(distance * 10) / 10;
-                if ((radius !== "All" ? (distance > radius) : "") 
-                    || (type !== "All" ? (project_type !== type) : "") 
-                    || (status !== "All" ? (project_status !== status) : "")) {
-                    list_items[i].style.display = "none";
-                }
-                else if (distance === 0) {
+
+                if (distance === 0 || name.includes(search_result)) {
                     list_items[i].style.backgroundColor = "#def4f4";
                     list_items[i].getElementsByClassName('project-distance')[0].innerText = distance_rounded + " mi away (project match!)";
                     count += 1;
+                }
+                else if ((radius !== "All" ? (distance > radius) : "") 
+                    || (type !== "All" ? (project_type !== type) : "") 
+                    || (status !== "All" ? (project_status !== status) : "")) {
+                    list_items[i].style.display = "none";
                 }
                 else {
                     list_items[i].style.display = "flex";
