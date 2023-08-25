@@ -494,6 +494,7 @@
                 addressCoordinates = e.result.center;
                 if (search_result.value.includes('✅')) {
                     disableFilters();
+                    update_list();
                 }
                 else {
                     radius.disabled = false;
