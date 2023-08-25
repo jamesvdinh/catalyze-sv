@@ -423,11 +423,13 @@
                 accessToken: MAPBOX_KEY,
                 countries: 'us',
                 proximity: [-121.898395, 37.322972],
-                localGeocoder: forwardGeocoder,
+                localGeocoder: forwardGeocoder,/*  */
                 placeholder: "Search by city, project name",
             });
 
             const search_bar = document.getElementById('geocoder');
+
+            // Add geocoder result to container.
             geocoder.addTo(search_bar);
 
             const search_input = search_bar.getElementsByTagName('input')[0];
@@ -483,20 +485,21 @@
                 'change',
                 function() { checkFilled(); }
             );
-            // Get the geocoder results container.
-            let results = document.getElementById('results');
+            const search_result = document.getElementsByClassName('mapboxgl-ctrl-geocoder--input')[0];
 
-            // Add geocoder result to container.
             geocoder.on('result', (e) => {
-                address_coords = e.result.center;
-                addressCoordinates = address_coords;
-                radius.disabled = false;
-                checkFilled();
+                addressCoordinates = e.result.center;
+                if (search_result.value.includes('✅')) {
+                    disableFilters();
+                }
+                else {
+                    radius.disabled = false;
+                    checkFilled();
+                }
             });
             
             // Clear results container when search is cleared.
             geocoder.on('clear', () => {
-                results.innerText = '';
                 restore_list();
             });
 
@@ -592,13 +595,12 @@
 
                 if (distance === 0 || name.includes(search_result)) {
                     list_items[i].style.backgroundColor = "#def4f4";
-                    list_items[i].getElementsByClassName('project-distance')[0].innerText = distance_rounded + " mi away (project match!)";
                     count += 1;
                 }
                 else if ((radius !== "All" ? (distance > radius) : "") 
                     || (type !== "All" ? (project_type !== type) : "") 
                     || (status !== "All" ? (project_status !== status) : "")) {
-                    list_items[i].style.display = "none";
+                    list_items[i].style.display = "none";/*  */
                 }
                 else {
                     list_items[i].style.display = "flex";
@@ -648,14 +650,15 @@
 
         function resetFilters() {
             const inputElementIDs = [
-                'radius',
                 'type',
                 'status'
             ]
             inputElementIDs.map(id => {
                 document.getElementById(id).value = "";
+                document.getElementById(id).disabled = false;
             })
             document.getElementsByClassName('mapboxgl-ctrl-geocoder--input')[0].value = "";
+            document.getElementById('radius').value = "";
         }
 
         function checkFilled() {
@@ -683,6 +686,18 @@
                 document.getElementById('submit-button').disabled = true;
                 return;
             }
+        }
+
+        function disableFilters() {
+            const inputElementIDs = [
+                'radius',
+                'type',
+                'status'
+            ]
+            inputElementIDs.map(id => {
+                document.getElementById(id).disabled = true;
+            })
+            document.getElementById('submit-button').disabled = false;
         }
 
     </script>
