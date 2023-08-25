@@ -169,7 +169,7 @@
         box-shadow: unset;
         border: 1px solid black;
         min-width: 280px;
-        font-size: 16px;
+        font-size: 16px !important;
         height: 36px;
         display: flex;
     }
@@ -189,13 +189,11 @@
     }
     @media screen and (min-width: 640px) {
         .mapboxgl-ctrl-geocoder {
-            font-size: unset;
-            line-height: unset;
             max-width: unset;
         }
         .mapboxgl-ctrl-geocoder--input {
             color: unset;
-            font-size: 14px;
+            font-size: 16px;
         }
     }
     .submit-button {
@@ -490,8 +488,6 @@
 
             // Add geocoder result to container.
             geocoder.on('result', (e) => {
-                search_enabled = true;
-                const radius_val = radius.value;
                 address_coords = e.result.center;
                 addressCoordinates = address_coords;
                 radius.disabled = false;
@@ -574,9 +570,10 @@
             const project_list = document.getElementById('project-list');
             const list_items = project_list.getElementsByClassName('project-entry');
             const result = addressCoordinates;
-            const search_result = document.getElementsByClassName('mapboxgl-ctrl-geocoder--input')[0].value;
+            let search_result = document.getElementsByClassName('mapboxgl-ctrl-geocoder--input')[0].value;
             if (search_result.includes('✅')) {
                 search_result = search_result.substring(0, search_result.lastIndexOf(" ")); // removes the ✅ after the search result
+                console.log(search_result);
             }
             const radius = document.getElementById('radius').value;
             const type = document.getElementById('type').value;
