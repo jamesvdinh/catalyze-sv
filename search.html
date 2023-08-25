@@ -97,6 +97,12 @@
         width: 100%;
     }
 
+    .project-distance {
+        text-align: center;
+        background-color: rgb(243, 243, 243);
+        margin: 0 3px 5px;
+    }
+
     .project-feedbackNeeded {
         font-size: 12px;
         margin: 0;
@@ -109,9 +115,6 @@
     }
 
     .project-numFeedbacks, .project-numParticipants {
-        /* position: absolute;
-        bottom: 0;
-        right: 0; */
         display: flex;
         justify-content: center;
         align-items: center;
@@ -588,6 +591,7 @@
                 const coords = list_items[i].getElementsByClassName('project-coordinates')[0].innerText.split(',');
                 const project_type = list_items[i].getElementsByClassName('project-type')[0].innerText;
                 const project_status = list_items[i].getElementsByClassName('project-status')[0].innerText;
+                let pinnedIndex = undefined;
 
                 const distance = find_distance(result, coords);
 
@@ -595,12 +599,14 @@
 
                 if (distance === 0 || name.includes(search_result)) {
                     list_items[i].style.backgroundColor = "#def4f4";
+                    list_items[i].getElementsByClassName('project-distance')[0].innerText = "Project Match!";
+                    pinnedIndex = i;
                     count += 1;
                 }
                 else if ((radius !== "All" ? (distance > radius) : "") 
                     || (type !== "All" ? (project_type !== type) : "") 
                     || (status !== "All" ? (project_status !== status) : "")) {
-                    list_items[i].style.display = "none";/*  */
+                    list_items[i].style.display = "none";
                 }
                 else {
                     list_items[i].style.display = "flex";
@@ -632,6 +638,7 @@
                 // list_items[i].getElementsByClassName('project-distance')[0].innerText = "";
                 list_items[i].getElementsByClassName('project-distance')[0].display = "none";
             }
+            resetFilters();
             checkFilled();
         }
 
