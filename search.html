@@ -4,17 +4,23 @@
 <!-- Housing Development Search Tool -->
 
 <head>
-  <meta charset="utf-8">
-  <title>Search Projects</title>
-  <meta name="description" content="Find nearby Shape SV projects in Silicon Valley">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="utf-8">
+    <title>Search Projects</title>
+    <meta name="description" content="Find nearby Shape SV projects in Silicon Valley">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <link rel="stylesheet" href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v5.0.0/mapbox-gl-geocoder.css" type="text/css">
-  <script src='https://unpkg.com/@turf/turf/turf.min.js'></script>
-  <script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v5.0.0/mapbox-gl-geocoder.min.js"></script>
-  <style>
+    <link rel="stylesheet" href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v5.0.0/mapbox-gl-geocoder.css" type="text/css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab&display=swap" rel="stylesheet">
+    <script src='https://unpkg.com/@turf/turf/turf.min.js'></script>
+    <script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v5.0.0/mapbox-gl-geocoder.min.js"></script>
+    <style>
+    * {
+        font-family: 'Roboto Slab', serif;
+    }
+
     body {
-        font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
         margin: 0;
         box-sizing: border-box;
     }
@@ -54,6 +60,7 @@
         padding-left: 5px;
         color: rgb(132, 132, 132);
         font-size: 16px;
+        padding-bottom: 2px;
     }
 
     .search-filter select:hover, .search-filter select:focus {
@@ -122,7 +129,7 @@
     }
 
     .numFeedbacks-icon {
-        margin-top: 4px;
+        margin-top: 2px;
         padding-right: 5px;
         stroke: coral;
         width: 28px;
@@ -175,6 +182,7 @@
         font-size: 16px !important;
         height: 36px;
         display: flex;
+        font-family: 'Roboto Slab', serif;
     }
     .mapboxgl-ctrl-geocoder--input:focus {
         outline: unset;
@@ -208,7 +216,6 @@
         border: unset;
         color: white;
         cursor: pointer;
-        height: 36px;
         font-size: 16px;
     }
 
@@ -236,6 +243,7 @@
     .clear-filters-text {
         margin-left: 3px;
         font-size: 16px;
+        margin-bottom: 1px;
     }
 
     .clear-filters:hover {
@@ -286,9 +294,9 @@
             </div>
             <div class="user-buttons">
                 <button class="submit-button" id="submit-button" onclick="update_list()" disabled>Search</button>
-                <button class="clear-filters" onclick="resetFilters(); restore_list()">
+                <button class="clear-filters" id="clear-filters" onclick="restore_list()">
                     <svg width="12px" height="12px" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" stroke-width="3" stroke="#000000" fill="none"><path d="M53.72,36.61A21.91,21.91,0,1,1,50.37,20.1"/><polyline points="51.72 7.85 50.85 20.78 37.92 19.9"/><path d="M53.72,36.61A21.91,21.91,0,1,1,50.37,20.1"/><polyline points="51.72 7.85 50.85 20.78 37.92 19.9"/></svg>
-                    <span class="clear-filters-text" id=".clear-filters-text">clear all filters</span>
+                    <span class="clear-filters-text" id="clear-filters-text">clear all filters</span>
                 </button>
             </div>
         </div>
@@ -492,16 +500,17 @@
 
             geocoder.on('result', (e) => {
                 addressCoordinates = e.result.center;
+                console.log(search_result.value);
                 if (search_result.value.includes('✅')) {
                     disableFilters();
-                    update_list();
+                    // update_list();
                 }
                 else {
                     radius.disabled = false;
                     checkFilled();
                 }
             });
-            
+
             // Clear results container when search is cleared.
             geocoder.on('clear', () => {
                 restore_list();
@@ -592,7 +601,6 @@
                 const coords = list_items[i].getElementsByClassName('project-coordinates')[0].innerText.split(',');
                 const project_type = list_items[i].getElementsByClassName('project-type')[0].innerText;
                 const project_status = list_items[i].getElementsByClassName('project-status')[0].innerText;
-                let pinnedIndex = undefined;
 
                 const distance = find_distance(result, coords);
 
