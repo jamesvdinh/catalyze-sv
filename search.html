@@ -368,7 +368,7 @@
           const project_status = current_project.currentStatus;
           const project_city = current_project.city;
           const project_link =
-            current_project["link-version7csvprojects-projectName"];
+            current_project["link-version7csvprojects-1-projectName"];
           const project_numFeedbacks =
             current_project["numberofFeedbacks(Internal)"];
           const project_desc = current_project.highlight1;
@@ -760,8 +760,8 @@
           return;
         }
 
-        window.parent.postMessage("onLoad", "https://alexshoor.wixsite.com");
         // for prod
+        window.parent.postMessage("onLoad", "https://alexshoor.wixsite.com");
         window.onmessage = (e) => {
           if (e.data) {
             createList(e.data);
