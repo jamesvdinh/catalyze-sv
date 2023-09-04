@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html class="no-js" lang="en">
   <!-- Housing Development Search Tool -->
 
@@ -54,7 +54,7 @@
       .search-menu {
         display: flex;
         flex-flow: row wrap;
-        margin: 0 auto 20px;
+        margin: 0 auto;
         justify-content: left;
       }
 
@@ -72,9 +72,7 @@
         padding-bottom: 2px;
       }
 
-      .search-filter select:hover,
-      .search-filter select:focus {
-        background-color: aliceblue;
+    .search-filter select:hover, .search-filter select:focus {
         cursor: pointer;
       }
 
@@ -116,7 +114,7 @@
 
       .project-distance {
         text-align: center;
-        background-color: rgb(243, 243, 243);
+        /* background-color: rgb(243, 243, 243); */
         margin: 0 3px 5px;
       }
 
@@ -287,6 +285,18 @@
       .project-desc {
         height: 105px;
       }
+
+    .error-msg {
+        padding: 3px 7px;
+        background-color: rgb(255, 190, 190);
+        width: fit-content;
+        margin: 2px 0;
+        display: none;
+    }
+
+    .error-container {
+        margin: 5px 0 10px;
+    }
     </style>
   </head>
 
@@ -314,8 +324,7 @@
           <button
             class="submit-button"
             id="submit-button"
-            onclick="update_list()"
-            disabled
+            onclick="searchQuery()"
           >
             Search
           </button>
@@ -344,6 +353,10 @@
           </button>
         </div>
       </div>
+        <div class="error-container">
+            <div class="error-msg" id="search-error">Please enter an address/project name</div>
+            <div class="error-msg" id="radius-error">Please enter a radius</div>
+        </div>
       <div class="results" id="results"></div>
     </section>
     <script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v5.0.0/mapbox-gl-geocoder.min.js"></script>
@@ -355,6 +368,10 @@
       let totalProjectNum = 0;
 
       function createList(items) {
+        /* 
+          Function that creates the initial list and each project entry + contents on page load
+          args: items -> fetched data from wix database
+        */
         let list = document.createElement("div");
         list.classList.add("project-list");
         list.setAttribute("id", "project-list");
@@ -463,6 +480,7 @@
           current_item.append(img, text_container);
           list.append(current_item);
 
+          // Page redirect callback
           current_item.addEventListener("click", (e) => {
             if (
               e.target.classList.contains("project-link") ||
@@ -496,6 +514,10 @@
       }
 
       function search(items) {
+        /* 
+          Function used to create the search input via Mapbox Geocoder component and append custom autocomplete data via Wix Dataset
+          args: items -> fetched data from wix database
+        */
         const geocoder = new MapboxGeocoder({
           accessToken: MAPBOX_KEY,
           countries: "us",
@@ -530,7 +552,7 @@
 
         const type = document.getElementById("type");
         const type_options = `
-                <option value="" disabled selected>Type</option>
+                <option value="All" selected>Type</option>
                 <option value="All">All</option>
                 <option value="100% Affordable">100% Affordable</option>
                 <option value="Hotel">Hotel</option>
@@ -543,7 +565,7 @@
 
         const status = document.getElementById("status");
         const status_options = `
-                <option value="" disabled selected>Status</option>
+                <option value="All" selected>Status</option>
                 <option value="All">All</option>
                 <option value="In Design">In Design</option>
             `;
@@ -553,25 +575,18 @@
         radius.addEventListener("change", function () {
           checkFilled();
         });
-        type.addEventListener("change", function () {
-          checkFilled();
-        });
-        status.addEventListener("change", function () {
-          checkFilled();
-        });
         const search_result = document.getElementsByClassName(
           "mapboxgl-ctrl-geocoder--input"
         )[0];
 
         geocoder.on("result", (e) => {
           addressCoordinates = e.result.center;
-          console.log(search_result.value);
           if (search_result.value.includes("✅")) {
             disableFilters();
-            // update_list();
+            clearErrMsg();
+            searchQuery();
           } else {
             radius.disabled = false;
-            checkFilled();
           }
         });
 
@@ -656,7 +671,6 @@
             0,
             search_result.lastIndexOf(" ")
           ); // removes the ✅ after the search result
-          console.log(search_result);
         }
         const radius = document.getElementById("radius").value;
         const type = document.getElementById("type").value;
@@ -678,12 +692,7 @@
 
           const distance_rounded = Math.round(distance * 10) / 10;
 
-          if (distance === 0 || name.includes(search_result)) {
-            list_items[i].style.backgroundColor = "#def4f4";
-            list_items[i].getElementsByClassName(
-              "project-distance"
-            )[0].innerText = "Project Match!";
-            pinnedIndex = i;
+          if (name.includes(search_result)) {
             count += 1;
           } else if (
             (radius !== "All" ? distance > radius : "") ||
@@ -729,11 +738,12 @@
           list_items[i].getElementsByClassName(
             "project-distance"
           )[0].innerText = "";
+          list_items[i].getElementsByClassName('project-distance')[0].innerText = "";
           list_items[i].getElementsByClassName("project-distance")[0].display =
             "none";
         }
         resetFilters();
-        checkFilled();
+        // checkFilled();
       }
 
       function find_distance(startCoords, endCoords) {
@@ -772,48 +782,76 @@
 
       function resetFilters() {
         const inputElementIDs = ["type", "status"];
+        const geocoderClearButton = document.querySelector('.mapboxgl-ctrl-geocoder--button');
         inputElementIDs.map((id) => {
-          document.getElementById(id).value = "";
+          document.getElementById(id).value = "All";
           document.getElementById(id).disabled = false;
         });
-        document.getElementsByClassName(
-          "mapboxgl-ctrl-geocoder--input"
-        )[0].value = "";
+        geocoderClearButton.click();
         document.getElementById("radius").value = "";
+		    document.getElementById("submit-button").disabled = false;
       }
 
       function checkFilled() {
+        const search_input = document.querySelector('.mapboxgl-ctrl-geocoder--input');
+        const radius_input = document.querySelector('#radius');
+
         let isFilled = true;
-        const inputElementIDs = ["radius", "type", "status"];
+			if (search_input.value === "") {
+				isFilled = false;
+				document.querySelector('#search-error').style.display = "block";
+			}
+			else {
+				document.querySelector('#search-error').style.display = "none";
+			}
 
-        if (
-          document.getElementsByClassName("mapboxgl-ctrl-geocoder--input")[0]
-            .value === ""
-        ) {
-          isFilled = false;
-        }
-
-        inputElementIDs.map((id) => {
-          if (document.getElementById(id).value === "") {
-            isFilled = false;
-          }
-        });
-
-        if (isFilled) {
-          document.getElementById("submit-button").disabled = false;
-        } else {
-          document.getElementById("submit-button").disabled = true;
-          return;
-        }
+			if (radius_input.value === "") {
+				isFilled = false;
+				document.querySelector('#radius-error').style.display = "block";
+			}
+			else {
+				document.querySelector('#radius-error').style.display = "none";
+			}
+		return isFilled;
       }
 
-      function disableFilters() {
+	  function clearErrMsg() {
+      /* 
+        Function to set all error messages to display: none;
+      */
+      const search_input = document.querySelector('.mapboxgl-ctrl-geocoder--input');
+          const radius_input = document.querySelector('#radius');
+
+      document.querySelector('#search-error').style.display = "none";
+      document.querySelector('#radius-error').style.display = "none";
+	  }
+
+    function disableFilters() {
+      /* 
+        Function to disable all select filters
+      */
         const inputElementIDs = ["radius", "type", "status"];
         inputElementIDs.map((id) => {
           document.getElementById(id).disabled = true;
         });
-        document.getElementById("submit-button").disabled = false;
+		  document.getElementById("submit-button").disabled = true;
+    }
+
+	  function searchQuery() {
+      /* 
+        Function calls when Search button is pressed
+      */
+      const search_result = document.querySelector('.mapboxgl-ctrl-geocoder--input');
+      let isProject = search_result.value.includes("✅");
+
+      if (checkFilled() && !isProject) {
+        update_list();
       }
+      else if (isProject) {
+        clearErrMsg()
+        update_list();
+      }
+	  }
     </script>
   </body>
 </html>
