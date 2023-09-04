@@ -276,10 +276,48 @@
         margin-right: 2px;
       }
 
+      .info-container {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-flow: row nowrap;
+        width: 100%;
+      }
+
       .results {
         text-align: left;
         font-size: 16px;
         margin-left: 7px;
+      }
+
+      .info-icon {
+        cursor: help;
+        margin-right: 22px;
+      }
+
+      @keyframes fadeIn {
+        0% {
+          opacity: 0;
+        }
+        100% {
+          opacity: 1;
+        }
+      }
+
+      .info-icon:hover ~ .info-card {
+        animation: fadeIn 0.2s;
+        display: block;
+      }
+
+      .info-card {
+        position: absolute;
+        right: 70px;
+        width: 250px;
+        background-color: rgba(214, 214, 214, 0.904);
+        padding: 10px 14px;
+        border-radius: 5px;
+        z-index: 1;
+        display: none;
       }
 
       .project-desc {
@@ -287,15 +325,15 @@
       }
 
     .error-msg {
-        padding: 3px 7px;
-        background-color: rgb(255, 190, 190);
-        width: fit-content;
-        margin: 2px 0;
-        display: none;
+      padding: 3px 7px;
+      background-color: rgb(255, 190, 190);
+      width: fit-content;
+      margin: 2px 0;
+      display: none;
     }
 
     .error-container {
-        margin: 5px 0 10px;
+      margin: 5px 0 10px;
     }
     </style>
   </head>
@@ -353,11 +391,19 @@
           </button>
         </div>
       </div>
-        <div class="error-container">
-            <div class="error-msg" id="search-error">Please enter an address/project name</div>
-            <div class="error-msg" id="radius-error">Please enter a radius</div>
+      <div class="error-container">
+          <div class="error-msg" id="search-error">Please enter an address/project name</div>
+          <div class="error-msg" id="radius-error">Please enter a radius</div>
+      </div>
+      <div class="info-container">
+        <div class="results" id="results"></div>
+        <div>
+          <svg class="info-icon" height="22px" width="22px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path fill-rule="evenodd" clip-rule="evenodd" d="M22 12C22 17.5228 17.5228 22 12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12ZM12 17.75C12.4142 17.75 12.75 17.4142 12.75 17V11C12.75 10.5858 12.4142 10.25 12 10.25C11.5858 10.25 11.25 10.5858 11.25 11V17C11.25 17.4142 11.5858 17.75 12 17.75ZM12 7C12.5523 7 13 7.44772 13 8C13 8.55228 12.5523 9 12 9C11.4477 9 11 8.55228 11 8C11 7.44772 11.4477 7 12 7Z" fill="#1C274C"/>
+          </svg>
+          <div class="info-card">Use this search tool to find nearby projects or locate projects via their name.<br><br>Search by proximity -> enter an address, city, or zip code, and enter a radius<br><br>Search by project name -> begin typing the project name in the search field</div>
         </div>
-      <div class="results" id="results"></div>
+      </div>
     </section>
     <script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v5.0.0/mapbox-gl-geocoder.min.js"></script>
 
@@ -499,8 +545,8 @@
             }
           });
         });
-        const results = document.getElementById("results");
-        results.after(list);
+        const info_container = document.querySelector('.info-container');
+        info_container.after(list);
         const list_items = list.getElementsByClassName("project-entry");
         Array.from(list_items)
           .sort((a, b) =>
