@@ -194,6 +194,7 @@
         height: 36px;
         display: flex;
         font-family: "Roboto Slab", serif;
+        max-width: unset;
       }
       .mapboxgl-ctrl-geocoder--input:focus {
         outline: unset;
@@ -209,13 +210,9 @@
       .mapboxgl-ctrl-geocoder--icon {
         top: 7px;
       }
-      @media screen and (min-width: 640px) {
-        .mapboxgl-ctrl-geocoder {
-          max-width: unset;
-        }
-        .mapboxgl-ctrl-geocoder--input {
-          color: unset;
-          font-size: 16px;
+      @media screen and (max-width: 640px) {
+        .mapboxgl-ctrl-geocoder--icon-close {
+          margin-top: unset;
         }
       }
       .submit-button {
@@ -846,17 +843,21 @@
 			if (search_input.value === "") {
 				isFilled = false;
 				document.querySelector('#search-error').style.display = "block";
+        document.querySelector('.mapboxgl-ctrl').style.border = "1px solid red";
 			}
 			else {
 				document.querySelector('#search-error').style.display = "none";
+        document.querySelector('.mapboxgl-ctrl').style.border = "1px solid gray";
 			}
 
 			if (radius_input.value === "") {
 				isFilled = false;
 				document.querySelector('#radius-error').style.display = "block";
+        document.querySelector('#radius').style.border = "1px solid red";
 			}
 			else {
 				document.querySelector('#radius-error').style.display = "none";
+        document.querySelector('#radius').style.border = "1px solid gray";
 			}
 		return isFilled;
       }
