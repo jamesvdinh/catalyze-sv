@@ -625,7 +625,7 @@
         // eventListener on geocoder autocomplete search
         geocoder.on("result", (e) => {
           addressCoordinates = e.result.center;
-          checkFilled();
+          document.querySelector('.mapboxgl-ctrl').style.border = "1px solid gray";
           if (search_result.value.includes("✅")) {
             disableFilters();
             clearErrMsg();
@@ -835,9 +835,13 @@
         geocoderClearButton.click();
         document.getElementById("radius").value = "";
 		    document.getElementById("submit-button").disabled = false;
+        clearErrMsg();
       }
 
       function checkFilled() {
+        /* 
+          Function that returns boolean if the address and radius filters are filled
+        */
         const search_input = document.querySelector('.mapboxgl-ctrl-geocoder--input');
         const radius_input = document.querySelector('#radius');
 
@@ -866,13 +870,15 @@
 
 	  function clearErrMsg() {
       /* 
-        Function to set all error messages to display: none;
+        Function to set all error messages to display: none and reset borders for unfilled filters
       */
       const search_input = document.querySelector('.mapboxgl-ctrl-geocoder--input');
           const radius_input = document.querySelector('#radius');
 
       document.querySelector('#search-error').style.display = "none";
       document.querySelector('#radius-error').style.display = "none";
+      document.querySelector('.mapboxgl-ctrl').style.border = "1px solid gray";
+      document.querySelector('#radius').style.border = "1px solid gray";
 	  }
 
     function disableFilters() {
