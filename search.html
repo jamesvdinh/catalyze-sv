@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en">
-<!-- Housing Development Search Tool -->
+  <!-- Housing Development Search Tool -->
 
   <head>
     <meta charset="utf-8" />
@@ -72,7 +72,8 @@
         padding-bottom: 2px;
       }
 
-    .search-filter select:hover, .search-filter select:focus {
+      .search-filter select:hover,
+      .search-filter select:focus {
         cursor: pointer;
       }
 
@@ -321,17 +322,17 @@
         height: 140px;
       }
 
-    .error-msg {
-      padding: 3px 7px;
-      background-color: rgb(255, 190, 190);
-      width: fit-content;
-      margin: 2px 0;
-      display: none;
-    }
+      .error-msg {
+        padding: 3px 7px;
+        background-color: rgb(255, 190, 190);
+        width: fit-content;
+        margin: 2px 0;
+        display: none;
+      }
 
-    .error-container {
-      margin: 15px 0 10px;
-    }
+      .error-container {
+        margin: 15px 0 10px;
+      }
     </style>
   </head>
 
@@ -389,16 +390,35 @@
         </div>
       </div>
       <div class="error-container">
-          <div class="error-msg" id="search-error">Please enter an address/project name</div>
-          <div class="error-msg" id="radius-error">Please enter a radius</div>
+        <div class="error-msg" id="search-error">
+          Please enter an address/project name
+        </div>
+        <div class="error-msg" id="radius-error">Please enter a radius</div>
       </div>
       <div class="info-container">
         <div class="results" id="results"></div>
         <div class="info-hover">
-          <svg class="info-icon" height="22px" width="22px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path fill-rule="evenodd" clip-rule="evenodd" d="M22 12C22 17.5228 17.5228 22 12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12ZM12 17.75C12.4142 17.75 12.75 17.4142 12.75 17V11C12.75 10.5858 12.4142 10.25 12 10.25C11.5858 10.25 11.25 10.5858 11.25 11V17C11.25 17.4142 11.5858 17.75 12 17.75ZM12 7C12.5523 7 13 7.44772 13 8C13 8.55228 12.5523 9 12 9C11.4477 9 11 8.55228 11 8C11 7.44772 11.4477 7 12 7Z" fill="#1C274C"/>
+          <svg
+            class="info-icon"
+            height="22px"
+            width="22px"
+            viewBox="0 0 24 24"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              fill-rule="evenodd"
+              clip-rule="evenodd"
+              d="M22 12C22 17.5228 17.5228 22 12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12ZM12 17.75C12.4142 17.75 12.75 17.4142 12.75 17V11C12.75 10.5858 12.4142 10.25 12 10.25C11.5858 10.25 11.25 10.5858 11.25 11V17C11.25 17.4142 11.5858 17.75 12 17.75ZM12 7C12.5523 7 13 7.44772 13 8C13 8.55228 12.5523 9 12 9C11.4477 9 11 8.55228 11 8C11 7.44772 11.4477 7 12 7Z"
+              fill="#1C274C"
+            />
           </svg>
-          <div class="info-card">Use this search tool to find nearby projects or locate projects via their name.<br><br>Search by proximity -> enter an address, city, or zip code, and enter a radius<br><br>Search by project name -> begin typing the project name in the search field</div>
+          <div class="info-card">
+            Use this search tool to find nearby projects or locate projects via
+            their name.<br /><br />Search by proximity -> enter an address,
+            city, or zip code, and enter a radius<br /><br />Search by project
+            name -> begin typing the project name in the search field
+          </div>
         </div>
       </div>
     </section>
@@ -454,8 +474,7 @@
           const project_type = current_project["detailProjectType(Check all that apply)"];
           const project_status = current_project.currentStatus;
           const project_city = current_project.city;
-          const project_link =
-            current_project["link-version7csvprojects-1-projectName"];
+          const project_link = current_project["link-shapesvalpha-projectName"];
           const project_numFeedbacks =
             current_project["numberofFeedbacks(Internal)"];
           const project_desc = current_project.highlight1;
@@ -569,7 +588,7 @@
             }
           });
         });
-        const info_container = document.querySelector('.info-container');
+        const info_container = document.querySelector(".info-container");
         info_container.after(list);
         const list_items = list.getElementsByClassName("project-entry");
         Array.from(list_items)
@@ -652,7 +671,8 @@
         // eventListener on geocoder autocomplete search
         geocoder.on("result", (e) => {
           addressCoordinates = e.result.center;
-          document.querySelector('.mapboxgl-ctrl').style.border = "1px solid gray";
+          document.querySelector(".mapboxgl-ctrl").style.border =
+            "1px solid gray";
           if (search_result.value.includes("✅")) {
             disableFilters();
             clearErrMsg();
@@ -810,7 +830,9 @@
           list_items[i].getElementsByClassName(
             "project-distance"
           )[0].innerText = "";
-          list_items[i].getElementsByClassName('project-distance')[0].innerText = "";
+          list_items[i].getElementsByClassName(
+            "project-distance"
+          )[0].innerText = "";
           list_items[i].getElementsByClassName("project-distance")[0].display =
             "none";
         }
@@ -828,14 +850,16 @@
 
       function resetFilters() {
         const inputElementIDs = ["type", "status"];
-        const geocoderClearButton = document.querySelector('.mapboxgl-ctrl-geocoder--button');
+        const geocoderClearButton = document.querySelector(
+          ".mapboxgl-ctrl-geocoder--button"
+        );
         inputElementIDs.map((id) => {
           document.getElementById(id).value = "All";
           document.getElementById(id).disabled = false;
         });
         geocoderClearButton.click();
         document.getElementById("radius").value = "";
-		    document.getElementById("submit-button").disabled = false;
+        document.getElementById("submit-button").disabled = false;
         clearErrMsg();
       }
 
@@ -843,71 +867,77 @@
         /* 
           Function that returns boolean if the address and radius filters are filled
         */
-        const search_input = document.querySelector('.mapboxgl-ctrl-geocoder--input');
-        const radius_input = document.querySelector('#radius');
+        const search_input = document.querySelector(
+          ".mapboxgl-ctrl-geocoder--input"
+        );
+        const radius_input = document.querySelector("#radius");
 
         let isFilled = true;
-			if (search_input.value === "") {
-				isFilled = false;
-				document.querySelector('#search-error').style.display = "block";
-        document.querySelector('.mapboxgl-ctrl').style.border = "1px solid red";
-			}
-			else {
-				document.querySelector('#search-error').style.display = "none";
-        document.querySelector('.mapboxgl-ctrl').style.border = "1px solid gray";
-			}
+        if (search_input.value === "") {
+          isFilled = false;
+          document.querySelector("#search-error").style.display = "block";
+          document.querySelector(".mapboxgl-ctrl").style.border =
+            "1px solid red";
+        } else {
+          document.querySelector("#search-error").style.display = "none";
+          document.querySelector(".mapboxgl-ctrl").style.border =
+            "1px solid gray";
+        }
 
-			if (radius_input.value === "") {
-				isFilled = false;
-				document.querySelector('#radius-error').style.display = "block";
-        document.querySelector('#radius').style.border = "1px solid red";
-			}
-			else {
-				document.querySelector('#radius-error').style.display = "none";
-        document.querySelector('#radius').style.border = "1px solid gray";
-			}
-		return isFilled;
+        if (radius_input.value === "") {
+          isFilled = false;
+          document.querySelector("#radius-error").style.display = "block";
+          document.querySelector("#radius").style.border = "1px solid red";
+        } else {
+          document.querySelector("#radius-error").style.display = "none";
+          document.querySelector("#radius").style.border = "1px solid gray";
+        }
+        return isFilled;
       }
 
-	  function clearErrMsg() {
-      /* 
+      function clearErrMsg() {
+        /* 
         Function to set all error messages to display: none and reset borders for unfilled filters
       */
-      const search_input = document.querySelector('.mapboxgl-ctrl-geocoder--input');
-          const radius_input = document.querySelector('#radius');
+        const search_input = document.querySelector(
+          ".mapboxgl-ctrl-geocoder--input"
+        );
+        const radius_input = document.querySelector("#radius");
 
-      document.querySelector('#search-error').style.display = "none";
-      document.querySelector('#radius-error').style.display = "none";
-      document.querySelector('.mapboxgl-ctrl').style.border = "1px solid gray";
-      document.querySelector('#radius').style.border = "1px solid gray";
-	  }
+        document.querySelector("#search-error").style.display = "none";
+        document.querySelector("#radius-error").style.display = "none";
+        document.querySelector(".mapboxgl-ctrl").style.border =
+          "1px solid gray";
+        document.querySelector("#radius").style.border = "1px solid gray";
+      }
 
-    function disableFilters() {
-      /* 
+      function disableFilters() {
+        /* 
         Function to disable all select filters
       */
         const inputElementIDs = ["radius", "type", "status"];
         inputElementIDs.map((id) => {
           document.getElementById(id).disabled = true;
         });
-		  document.getElementById("submit-button").disabled = true;
-    }
+        document.getElementById("submit-button").disabled = true;
+      }
 
-	  function searchQuery() {
-      /* 
+      function searchQuery() {
+        /* 
         Function calls when Search button is pressed
       */
-      const search_result = document.querySelector('.mapboxgl-ctrl-geocoder--input');
-      let isProject = search_result.value.includes("✅");
+        const search_result = document.querySelector(
+          ".mapboxgl-ctrl-geocoder--input"
+        );
+        let isProject = search_result.value.includes("✅");
 
-      if (checkFilled() && !isProject) {
-        update_list();
+        if (checkFilled() && !isProject) {
+          update_list();
+        } else if (isProject) {
+          clearErrMsg();
+          update_list();
+        }
       }
-      else if (isProject) {
-        clearErrMsg()
-        update_list();
-      }
-	  }
     </script>
   </body>
 </html>
