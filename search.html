@@ -431,7 +431,7 @@
       let totalProjectNum = 0;
 
       window.addEventListener("load", () => {
-        let dev = true;
+        let dev = false;
         // for dev
         if (dev) {
           fetch(
@@ -471,7 +471,8 @@
           const project_feedbackNeeded = current_project.nextAction;
           const project_name = current_project.projectName;
           const project_address = current_project.projectAddress;
-          const project_type = current_project["detailProjectType(Check all that apply)"];
+          const project_type =
+            current_project["detailProjectType(Check all that apply)"];
           const project_status = current_project.currentStatus;
           const project_city = current_project.city;
           const project_link = current_project["link-shapesvalpha-projectName"];
