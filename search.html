@@ -64,7 +64,7 @@
       }
 
       .search-filter select {
-        width: 85px;
+        width: 95px;
         border-radius: 50px;
         padding-left: 5px;
         color: rgb(132, 132, 132);
@@ -115,7 +115,6 @@
 
       .project-distance {
         text-align: center;
-        /* background-color: rgb(243, 243, 243); */
         margin: 0 3px 5px;
       }
 
@@ -190,7 +189,7 @@
         border-radius: 50px;
         box-shadow: unset;
         border: 1px solid black;
-        min-width: 280px;
+        min-width: 320px;
         font-size: 16px !important;
         height: 36px;
         display: flex;
@@ -648,41 +647,42 @@
 
         // Radius input
         const radius = document.getElementById("radius");
-        const options = `
-                <option value="" disabled selected>Radius</option>
-                <option value="All">All</option>
-                <option value="1">1 mi</option>
-                <option value="2">2 mi</option>
-                <option value="5">5 mi</option>
-                <option value="10">10 mi</option>
-                <option value="15">15 mi</option>
-                <option value="20">20 mi</option>
-                <option value="25">25 mi</option>
-            `;
-        radius.innerHTML += options;
+        const radius_values = [1, 2, 5, 10, 15, 20, 25];
+        let radius_options = `<option value="" disabled selected>Radius</option>`;
+        radius_values.forEach((val, i) => {
+          radius_options += `<option value="${val}">${val} mi</option>`;
+        })
+        radius.innerHTML += radius_options;
 
+        // Method to iterate through each project type and add to type dropdown
+        let uniqueTypes = ["All"];
+        items.forEach((item, i) => {
+          let typeArray = item["detailProjectType(Check all that apply)"];
+          for (let i = 0; i < typeArray.length; i++) {
+            if(uniqueTypes.indexOf(typeArray[i]) === -1) {
+              uniqueTypes.push(typeArray[i]);
+            }
+          }
+        })
+        let type_options = `<option value="All" selected>Type</option>`;
+        uniqueTypes.forEach((type, i) => {
+          type_options += `<option value="${type}">${type}</option>`;
+        })
         const type = document.getElementById("type");
-        const type_options = `
-                <option value="All" selected>Type</option>
-                <option value="All">All</option>
-                <option value="100% Affordable">100% Affordable</option>
-                <option value="Hotel">Hotel</option>
-                <option value="Office Space">Office Space</option>
-                <option value="Residential U">Residential U</option>
-                <option value="Retail Space">Retail Space</option>
-                <option value="Some Affordable">Some Affordable</option>
-            `;
         type.innerHTML += type_options;
 
+        // Method to iterate through each project status and add to status dropdown
+        let uniqueStatus = ["All"];
+        items.forEach((item, i) => {
+          if(uniqueStatus.indexOf(item["currentStatus"]) === -1) {
+            uniqueStatus.push(item["currentStatus"]);
+          }
+        })
+        let status_options = `<option value="All" selected>Status</option>`;
+        uniqueStatus.forEach((status, i) => {
+          status_options += `<option value="${status}">${status}</option>`;
+        })
         const status = document.getElementById("status");
-        const status_options = `
-                <option value="All" selected>Status</option>
-                <option value="All">All</option>
-                <option value="In Design">In Design</option>
-                <option value="In Review">In Review</option>
-                <option value="Approved">Approved</option>
-            `;
-
         status.innerHTML += status_options;
 
         radius.addEventListener("change", function () {
