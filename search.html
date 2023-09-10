@@ -812,7 +812,7 @@
             count += 1;
           } else if (
             (radius !== "All" ? distance > radius : "") ||
-            (type !== "All" ? !type.includes(project_type) : "") ||
+            (type !== "All" ? !project_type.includes(type) : "") ||
             (status !== "All" ? project_status !== status : "")
           ) {
             list_items[i].style.display = "none";
