@@ -258,6 +258,20 @@
         text-decoration: underline;
       }
 
+      .project-content-container {
+        display: flex;
+        flex-flow: column nowrap;
+        min-height: 220px;
+      }
+      
+      .project-bottom-container {
+        display: flex;
+        flex-flow: column nowrap;
+        position: absolute;
+        bottom: 10px;
+        width: 95%;
+      }
+
       .project-quantity-container {
         display: flex;
         justify-content: space-between;
@@ -328,10 +342,6 @@
         z-index: 1;
         display: none;
         transform: translateX(-100%);
-      }
-
-      .project-desc {
-        height: 140px;
       }
 
       .error-msg {
@@ -551,6 +561,9 @@
           desc.textContent = project_desc;
           desc.classList.add("project-desc");
 
+          const bottom_container = document.createElement("div");
+          bottom_container.classList.add("project-bottom-container");
+
           const quantity_container = document.createElement("div");
           quantity_container.classList.add("project-quantity-container");
 
@@ -569,6 +582,13 @@
 
           quantity_container.append(link, numFeedbacks);
 
+          const content_container = document.createElement("div");
+          content_container.classList.add("project-content-container");
+
+          bottom_container.append(distance, quantity_container);
+
+          content_container.append(desc, bottom_container);
+
           const coordinates = document.createElement("p");
           getCoordinates(project_address).then((response) => {
             coordinates.textContent = response;
@@ -579,9 +599,10 @@
             feedbackNeeded,
             nameLink,
             city,
-            desc,
-            distance,
-            quantity_container,
+            // desc,
+            // distance,
+            // quantity_container,
+            content_container,
             type,
             status,
             coordinates
