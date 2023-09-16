@@ -477,6 +477,21 @@
         };
       });
 
+      function getFullImageURL(imageSrc) {
+        let strReturnImage = "";
+        if (imageSrc.startsWith("wix:image:")) {
+          let wixImageURL = "";
+          wixImageURL = "https://static.wixstatic.com/media/";
+          let wixLocalURL = "";
+          wixLocalURL = imageSrc.replace('wix:image://v1/', '');
+          wixLocalURL = wixLocalURL.substr(0, wixLocalURL.lastIndexOf('/'));
+          strReturnImage = wixImageURL + wixLocalURL;
+        } else {
+              strReturnImage = imageSrc;
+           }
+        return strReturnImage;
+      }
+
       function createList(items) {
         /* 
           Function that creates the initial list and each project entry + contents on page load
@@ -509,7 +524,7 @@
           text_container.classList.add("text-container");
 
           const img = document.createElement("img");
-          img.src = project_img;
+          img.src = getFullImageURL(project_img);
           img.classList.add("project-img");
 
           const feedbackNeeded = document.createElement("p");
