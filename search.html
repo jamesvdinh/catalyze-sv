@@ -460,7 +460,6 @@
           )
             .then((res) => res.json())
             .then((data) => {
-              console.log(data.items);
               createList(data.items);
               search(data.items);
             });
