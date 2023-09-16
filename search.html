@@ -460,6 +460,7 @@
           )
             .then((res) => res.json())
             .then((data) => {
+              console.log(data.items);
               createList(data.items);
               search(data.items);
             });
@@ -495,7 +496,7 @@
             current_project["detailProjectType(Check all that apply)"];
           const project_status = current_project.currentStatus;
           const project_city = current_project.city;
-          const project_link = current_project["link-shapesvalpha-projectName"];
+          const project_link = "https://alexshoor.wixsite.com" + current_project["link-shapesvalpha-projectName"];
           const project_numFeedbacks =
             current_project["numberofFeedbacks(Internal)"];
           const project_desc = current_project.highlight1;
@@ -953,8 +954,14 @@
         const search_result = document.querySelector(
           ".mapboxgl-ctrl-geocoder--input"
         );
+        const type_result = document.querySelector("#type").value;
+        const status_result = document.querySelector("#status").value;
         let isProject = search_result.value.includes("✅");
 
+        if (search_result === "" && (type_result !== "All" || status_result !== "All")) {
+          clearErrMsg();
+          update_list();
+        }
         if (checkFilled() && !isProject) {
           update_list();
         } else if (isProject) {
