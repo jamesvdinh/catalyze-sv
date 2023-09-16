@@ -197,7 +197,7 @@
         border-radius: 50px;
         box-shadow: unset;
         border: 1px solid black;
-        min-width: 320px;
+        min-width: 300px;
         font-size: 16px !important;
         height: 36px;
         display: flex;
@@ -221,6 +221,14 @@
       @media screen and (max-width: 640px) {
         .mapboxgl-ctrl-geocoder--icon-close {
           margin-top: unset;
+        }
+
+        .mapboxgl-ctrl-geocoder {
+          min-width: 280px;
+        }
+
+        .info-hover .info-card {
+          width: 220px;
         }
       }
       .submit-button {
@@ -478,7 +486,6 @@
           )
             .then((res) => res.json())
             .then((data) => {
-              console.log(data.items);
               createList(data.items);
               search(data.items);
             });
