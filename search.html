@@ -486,6 +486,7 @@
           )
             .then((res) => res.json())
             .then((data) => {
+              console.log(data.items);
               createList(data.items);
               search(data.items);
             });
@@ -539,7 +540,7 @@
           const project_link = "https://alexshoor.wixsite.com/shapesvalpha" + current_project["link-shapesvalpha-projectName"];
           const project_numFeedbacks =
             current_project["numberofFeedbacks(Internal)"];
-          const project_desc = current_project["overviewParagraph1 "];
+          const project_desc = current_project["overviewParagraph1"];
 
           let current_item = document.createElement("div");
           current_item.classList.add("project-entry");
