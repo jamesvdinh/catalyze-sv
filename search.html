@@ -371,6 +371,35 @@
       .error-container {
         margin: 15px 0 10px;
       }
+
+      .pagination {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .pagination .btn {
+        background: none;
+        border: none;
+        cursor: pointer;
+        font-size: 14px;
+      }
+
+      .pagination .cur-page {
+        font-size: 20px;
+      }
+
+      .pagination .btn--left, .pagination .btn--right {
+        font-size: 20px;
+      }
+
+      .hidden {
+        visibility: hidden;
+        opacity: 0;
+        pointer-events: none;
+      }
+
     </style>
   </head>
 
@@ -468,8 +497,18 @@
     <script>
       const MAPBOX_KEY =
         "pk.eyJ1IjoiY2F0YWx5emVzdiIsImEiOiJjazZ4d2RoN2gwa2QyM2tydnF6dG1zbjNrIn0.erXugBYot80KgmE2egMXCA";
+      const projectItems = [];
+      let shownProjectItems = [];
       let addressCoordinates = [];
       let totalProjectNum = 0;
+      let curPage = 1;
+      let itemsPerPage = 8;
+
+      // 1: 0 - 8
+      // 2: 9 - 17  16
+      // 3: 18 - 26  24
+      // 4: 27 - 35  32
+      // 5: 36 - 44
 
       window.addEventListener("load", () => {
         let dev = true;
@@ -486,8 +525,9 @@
           )
             .then((res) => res.json())
             .then((data) => {
-              createList(data.items);
-              search(data.items);
+              projectItems.push(...data.items);
+              createList(projectItems, curPage, itemsPerPage);
+              search(projectItems);
             });
 
           return;
@@ -518,11 +558,50 @@
         return strReturnImage;
       }
 
-      function createList(items) {
+      function togglePageBtns (curPage, lastPage) {
+        const btnLeft = document.querySelector('.btn--left');
+        const btnFirst = document.querySelector('.btn--first');
+        const btnLast = document.querySelector('.btn--last');
+        const btnRight = document.querySelector('.btn--right');
+        const dots = document.querySelectorAll('.dots')
+
+        if (curPage === 1) {
+          btnLeft.classList.add('hidden');
+          btnFirst.classList.add('hidden');
+          dots[0].classList.add('hidden')
+        } else if (curPage === lastPage) {
+          
+        }
+      }
+
+      function renderPagination (items, curPage, itemsPerPage) {
+        console.log(itemsPerPage)
+        const totalPages = Math.ceil(items.length / itemsPerPage);
+        const container = document.querySelector('.search-container');
+
+        container.insertAdjacentHTML('beforeend', `
+          <div class='pagination'>
+              <button class="btn btn--left"><</button>
+              <button class="btn btn--first">1</button>
+              <span class='dots'>...</span>
+              <p class='cur-page'>${curPage}</p>
+              <span class='dots'>...</span>
+              <button class="btn btn--last">${totalPages.toString()}</button>
+              <button class="btn btn--right">></button>
+          </div>
+        `)
+
+        togglePageBtns(curPage, totalPages)
+      }
+      function createList(items, curPage, itemsPerPage) {
         /* 
-          Function that creates the initial list and each project entry + contents on page load
+        Function that creates the initial list and each project entry + contents on page load
           args: items -> fetched data from wix database
         */
+        if (document.querySelector('.project-list')) {
+          document.querySelector('.project-list').remove();
+        }
+
         let list = document.createElement("div");
         list.classList.add("project-list");
         list.setAttribute("id", "project-list");
@@ -658,19 +737,22 @@
               );
             }
           });
+
         });
         const info_container = document.querySelector(".info-container");
         info_container.after(list);
         const list_items = list.getElementsByClassName("project-entry");
         Array.from(list_items)
-          .sort((a, b) =>
-            a
-              .getElementsByClassName("project-name")[0]
-              .textContent.localeCompare(
-                b.getElementsByClassName("project-name")[0].textContent
-              )
+        .sort((a, b) =>
+        a
+        .getElementsByClassName("project-name")[0]
+        .textContent.localeCompare(
+          b.getElementsByClassName("project-name")[0].textContent
+          )
           )
           .forEach((item) => list.appendChild(item));
+        
+        renderPagination(projectItems, curPage, itemsPerPage);
       }
 
       function search(items) {
