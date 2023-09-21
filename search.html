@@ -336,17 +336,19 @@
       }
 
       .info-check {
-        cursor: help;
-      }
-
-      .info-check:hover ~ .info-card {
-        animation: fadeIn 0.2s;
-        display: block;
+        cursor: pointer;
       }
 
       .info-input:checked ~ .info-card {
         animation: fadeIn 0.2s;
         display: block;
+      }
+
+      @media (min-width: 640px) {
+        .info-check:hover ~ .info-card {
+          animation: fadeIn 0.2s;
+          display: block;
+        }
       }
 
       .info-card {
