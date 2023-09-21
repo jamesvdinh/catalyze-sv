@@ -373,98 +373,180 @@
       .error-container {
         margin: 15px 0 10px;
       }
+
+      .load-wrapper {
+        height: 100%;
+        width: 100%;
+        position: absolute;
+        display: flex;
+        flex-flow: column wrap;
+        justify-content: center;
+        align-items: center;
+        background-color: rgba(211, 211, 211, 0.172);
+      }
+
+      .loader {
+        display: inline-block;
+        width: 64px;
+        height: 64px;
+      }
+
+      .loader:after {
+        content: " ";
+        display: block;
+        width: 51px;
+        height: 51px;
+        margin: 1px;
+        border-radius: 50%;
+        border: 5px solid #48647c;
+        border-color: #48647c transparent #48647c transparent;
+        animation: lds-dual-ring 1.2s linear infinite;
+      }
+
+      .loader-title {
+        font-weight: 400;
+      }
+
+      .loader-title strong {
+        color: #0c7ef0;
+      }
+
+      .loading-text {
+        animation: fade-in-out ease 2s infinite;
+      }
+
+      .hidden {
+        animation: fade-out ease 1s;
+      }
+
+      @keyframes lds-dual-ring {
+      0% {
+        transform: rotate(0deg);
+      }
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+
+    @keyframes fade-in-out {
+      0% {
+        opacity: 1;
+      }
+      50% {
+        opacity: 0;
+      }
+      100% {
+        opacity: 1;
+      }
+    }
+
+    @keyframes fade-out {
+      0% {
+        opacity: 1;
+      }
+      100% {
+        opacity: 0;
+      }
+    }
     </style>
   </head>
 
   <body>
-    <section class="search-container">
-      <div class="search-menu">
-        <div class="search-filter">
-          <div id="geocoder"></div>
-        </div>
-        <div class="search-filter">
-          <select
-            class="search-select"
-            id="radius"
-            name="radius"
-            disabled
-          ></select>
-        </div>
-        <div class="search-filter">
-          <select class="search-select" id="type" name="type"></select>
-        </div>
-        <div class="search-filter">
-          <select class="search-select" id="status" name="status"></select>
-        </div>
-        <div class="user-buttons">
-          <button
-            class="submit-button"
-            id="submit-button"
-            onclick="searchQuery()"
-          >
-            Search
-          </button>
-          <button
-            class="clear-filters"
-            id="clear-filters"
-            onclick="restore_list()"
-          >
-            <svg
-              width="12px"
-              height="12px"
-              viewBox="0 0 64 64"
-              xmlns="http://www.w3.org/2000/svg"
-              stroke-width="3"
-              stroke="#000000"
-              fill="none"
+    <div class="load-wrapper">
+      <h3 class="loader-title">SHAPE <strong>SV</strong></h3>
+      <div class="loader"></div>
+      <p class="loading-text">
+        Loading
+      </p>
+    </div>
+      <section class="search-container">
+        <div class="search-menu">
+          <div class="search-filter">
+            <div id="geocoder"></div>
+          </div>
+          <div class="search-filter">
+            <select
+              class="search-select"
+              id="radius"
+              name="radius"
+              disabled
+            ></select>
+          </div>
+          <div class="search-filter">
+            <select class="search-select" id="type" name="type"></select>
+          </div>
+          <div class="search-filter">
+            <select class="search-select" id="status" name="status"></select>
+          </div>
+          <div class="user-buttons">
+            <button
+              class="submit-button"
+              id="submit-button"
+              onclick="searchQuery()"
             >
-              <path d="M53.72,36.61A21.91,21.91,0,1,1,50.37,20.1" />
-              <polyline points="51.72 7.85 50.85 20.78 37.92 19.9" />
-              <path d="M53.72,36.61A21.91,21.91,0,1,1,50.37,20.1" />
-              <polyline points="51.72 7.85 50.85 20.78 37.92 19.9" />
-            </svg>
-            <span class="clear-filters-text" id="clear-filters-text"
-              >clear all filters</span
+              Search
+            </button>
+            <button
+              class="clear-filters"
+              id="clear-filters"
+              onclick="restore_list()"
             >
-          </button>
-        </div>
-        <div class="info-hover">
-            <input class="info-input" id="info-check" type="checkbox">
-            <label class="info-check" for="info-check">
               <svg
-              height="25px"
-              width="25px"
-              viewBox="0 0 24 24"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
+                width="12px"
+                height="12px"
+                viewBox="0 0 64 64"
+                xmlns="http://www.w3.org/2000/svg"
+                stroke-width="3"
+                stroke="#000000"
+                fill="none"
               >
-                <path
-                  class="info-icon"
-                  fill-rule="evenodd"
-                  clip-rule="evenodd"
-                  d="M22 12C22 17.5228 17.5228 22 12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12ZM12 17.75C12.4142 17.75 12.75 17.4142 12.75 17V11C12.75 10.5858 12.4142 10.25 12 10.25C11.5858 10.25 11.25 10.5858 11.25 11V17C11.25 17.4142 11.5858 17.75 12 17.75ZM12 7C12.5523 7 13 7.44772 13 8C13 8.55228 12.5523 9 12 9C11.4477 9 11 8.55228 11 8C11 7.44772 11.4477 7 12 7Z"
-                  fill="#1C274C"
-                />
+                <path d="M53.72,36.61A21.91,21.91,0,1,1,50.37,20.1" />
+                <polyline points="51.72 7.85 50.85 20.78 37.92 19.9" />
+                <path d="M53.72,36.61A21.91,21.91,0,1,1,50.37,20.1" />
+                <polyline points="51.72 7.85 50.85 20.78 37.92 19.9" />
               </svg>
-            </label>
-            <div class="info-card">
-            Use this search tool to find nearby projects or locate projects via
-            their name.<br /><br />Search by proximity -> enter an address,
-            city, or zip code, and enter a radius<br /><br />Search by project
-            name -> begin typing the project name in the search field
-            </div>
+              <span class="clear-filters-text" id="clear-filters-text"
+                >clear all filters</span
+              >
+            </button>
+          </div>
+          <div class="info-hover">
+              <input class="info-input" id="info-check" type="checkbox">
+              <label class="info-check" for="info-check">
+                <svg
+                height="25px"
+                width="25px"
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    class="info-icon"
+                    fill-rule="evenodd"
+                    clip-rule="evenodd"
+                    d="M22 12C22 17.5228 17.5228 22 12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12ZM12 17.75C12.4142 17.75 12.75 17.4142 12.75 17V11C12.75 10.5858 12.4142 10.25 12 10.25C11.5858 10.25 11.25 10.5858 11.25 11V17C11.25 17.4142 11.5858 17.75 12 17.75ZM12 7C12.5523 7 13 7.44772 13 8C13 8.55228 12.5523 9 12 9C11.4477 9 11 8.55228 11 8C11 7.44772 11.4477 7 12 7Z"
+                    fill="#1C274C"
+                  />
+                </svg>
+              </label>
+              <div class="info-card">
+              Use this search tool to find nearby projects or locate projects via
+              their name.<br /><br />Search by proximity -> enter an address,
+              city, or zip code, and enter a radius<br /><br />Search by project
+              name -> begin typing the project name in the search field
+              </div>
+          </div>
         </div>
-      </div>
-      <div class="error-container">
-        <div class="error-msg" id="search-error">
-          Please enter an address/project name
+        <div class="error-container">
+          <div class="error-msg" id="search-error">
+            Please enter an address/project name
+          </div>
+          <div class="error-msg" id="radius-error">Please enter a radius</div>
         </div>
-        <div class="error-msg" id="radius-error">Please enter a radius</div>
-      </div>
-      <div class="info-container">
-        <div class="results" id="results"></div>
-      </div>
-    </section>
+        <div class="info-container">
+          <div class="results" id="results"></div>
+        </div>
+      </section>
     <script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v5.0.0/mapbox-gl-geocoder.min.js"></script>
 
     <script>
@@ -663,6 +745,12 @@
         });
         const info_container = document.querySelector(".info-container");
         info_container.after(list);
+        const loader = document.querySelector(".load-wrapper");
+        loader.classList.add("hidden");
+        setTimeout(function() {
+          loader.style.display = "none";
+        }, 1000)
+
         const list_items = list.getElementsByClassName("project-entry");
         Array.from(list_items)
           .sort((a, b) =>
