@@ -688,9 +688,6 @@
             feedbackNeeded,
             nameLink,
             city,
-            // desc,
-            // distance,
-            // quantity_container,
             content_container,
             type,
             status,
@@ -757,7 +754,7 @@
         // Add geocoder result to container.
         geocoder.addTo(search_bar);
 
-        const search_input = search_bar.getElementsByTagName("input")[0];
+        const search_input = search_bar.querySelector('.mapboxgl-ctrl-geocoder--input');
         let search_enabled = false;
         let address_coords = [0, 0];
 
@@ -803,6 +800,15 @@
 
         radius.addEventListener("change", function () {
           checkFilled();
+        });
+
+        type.addEventListener("change", () => {
+          clearErrMsg();
+          filter_list(type.value, status.value);
+        });
+        status.addEventListener("change", () => {
+          clearErrMsg();
+          filter_list(type.value, status.value);
         });
         const search_result = document.getElementsByClassName(
           "mapboxgl-ctrl-geocoder--input"
@@ -1095,15 +1101,9 @@
         const search_result = document.querySelector(
           ".mapboxgl-ctrl-geocoder--input"
         ).value;
-        const type_result = document.querySelector("#type").value;
-        const status_result = document.querySelector("#status").value;
         let isProject = search_result.includes("✅");
 
-        if (search_result === "" && (type_result !== "All" || status_result !== "All")) {
-          clearErrMsg();
-          filter_list(type_result, status_result);
-        }
-        else if (checkFilled() && !isProject) {
+        if (checkFilled() && !isProject) {
           update_list();
         }
         else if (isProject) {
