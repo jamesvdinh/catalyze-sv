@@ -137,22 +137,6 @@
         width: fit-content;
       }
 
-      .project-numFeedbacks,
-      .project-numParticipants {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        margin: 0;
-      }
-
-      .numFeedbacks-icon {
-        margin-top: 2px;
-        padding-right: 5px;
-        stroke: coral;
-        width: 28px;
-        height: 28px;
-      }
-
       .project-link-a {
         text-decoration: none;
         color: rgb(66, 142, 205);
@@ -161,7 +145,7 @@
       .project-link {
         text-decoration: none;
         color: black;
-        background-color: orangered;
+        background-color: #F26440;
         padding: 7px 30px;
         border-radius: 50px;
         color: white;
@@ -236,7 +220,7 @@
         text-align: center;
         padding: 7px 30px;
         border-radius: 50px;
-        background-color: orangered;
+        background-color: #F26440;
         border: unset;
         color: white;
         cursor: pointer;
@@ -332,7 +316,7 @@
       }
 
       .info-icon {
-        fill: orangered;
+        fill: #F26440;
       }
 
       .info-check {
@@ -354,7 +338,7 @@
       .info-card {
         position: absolute;
         width: 250px;
-        background-color: rgba(214, 214, 214, 0.904);
+        background-color: rgba(214, 214, 214, 0.948);
         padding: 10px 14px;
         border-radius: 5px;
         z-index: 1;
@@ -803,20 +787,12 @@
           const quantity_container = document.createElement("div");
           quantity_container.classList.add("project-quantity-container");
 
-          const numFeedbacks = document.createElement("div");
-          numFeedbacks.classList.add("icon-container");
-          const numFeedbacksText = document.createElement("span");
-          numFeedbacksText.innerHTML = project_numFeedbacks;
-          numFeedbacks.innerHTML = `<svg class="inline-svg numFeedbacks-icon" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" stroke-width="3" stroke="#000000" fill="none"><circle cx="31.89" cy="22.71" r="5.57"/><path d="M43.16,43.74A11.28,11.28,0,0,0,31.89,32.47h0A11.27,11.27,0,0,0,20.62,43.74Z"/><circle cx="48.46" cy="22.71" r="5.57"/><path d="M46.87,43.74H59.73A11.27,11.27,0,0,0,48.46,32.47h0a11.24,11.24,0,0,0-5.29,1.32"/><circle cx="15.54" cy="22.71" r="5.57"/><path d="M17.13,43.74H4.27A11.27,11.27,0,0,1,15.54,32.47h0a11.24,11.24,0,0,1,5.29,1.32"/></svg>`;
-          numFeedbacks.append(numFeedbacksText);
-          numFeedbacks.classList.add("project-numFeedbacks");
-
           const link = document.createElement("a");
           link.textContent = "More";
           link.href = project_link;
           link.classList.add("project-link");
 
-          quantity_container.append(link, numFeedbacks);
+          quantity_container.append(link);
 
           const content_container = document.createElement("div");
           content_container.classList.add("project-content-container");
@@ -835,9 +811,6 @@
             feedbackNeeded,
             nameLink,
             city,
-            // desc,
-            // distance,
-            // quantity_container,
             content_container,
             type,
             status,
@@ -907,7 +880,7 @@
         // Add geocoder result to container.
         geocoder.addTo(search_bar);
 
-        const search_input = search_bar.getElementsByTagName("input")[0];
+        const search_input = search_bar.querySelector('.mapboxgl-ctrl-geocoder--input');
         let search_enabled = false;
         let address_coords = [0, 0];
 
@@ -953,6 +926,15 @@
 
         radius.addEventListener("change", function () {
           checkFilled();
+        });
+
+        type.addEventListener("change", () => {
+          clearErrMsg();
+          filter_list(type.value, status.value);
+        });
+        status.addEventListener("change", () => {
+          clearErrMsg();
+          filter_list(type.value, status.value);
         });
         const search_result = document.getElementsByClassName(
           "mapboxgl-ctrl-geocoder--input"
@@ -1246,15 +1228,9 @@
         const search_result = document.querySelector(
           ".mapboxgl-ctrl-geocoder--input"
         ).value;
-        const type_result = document.querySelector("#type").value;
-        const status_result = document.querySelector("#status").value;
         let isProject = search_result.includes("✅");
 
-        if (search_result === "" && (type_result !== "All" || status_result !== "All")) {
-          clearErrMsg();
-          filter_list(type_result, status_result);
-        }
-        else if (checkFilled() && !isProject) {
+        if (checkFilled() && !isProject) {
           update_list();
         }
         else if (isProject) {
