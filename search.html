@@ -368,6 +368,7 @@
         /* justify-content: center; */
         align-items: center;
         background-color: rgba(211, 211, 211, 0.233);
+        z-index: 1;
       }
 
       .loader {
@@ -401,7 +402,7 @@
       }
 
       .hidden {
-        animation: fade-out ease 1s;
+        animation: fade-out ease 0.5s;
       }
 
       @keyframes lds-dual-ring {
@@ -724,7 +725,7 @@
         loader.classList.add("hidden");
         setTimeout(function() {
           loader.style.display = "none";
-        }, 1000)
+        }, 500)
 
         const list_items = list.getElementsByClassName("project-entry");
         Array.from(list_items)
