@@ -615,8 +615,13 @@
         window.parent.postMessage("onLoad", "https://alexshoor.wixsite.com");
         window.onmessage = (e) => {
           if (e.data) {
-            createList(e.data);
-            search(e.data);
+            projectItems.push(...e.date);
+            Promise.all(projectItems.map(proj => getCoordinates(proj.projectAddress).then(coords => proj.coords = coords))).then((projects) => {
+              shownProjectItems = projects.slice();
+              shownProjectItems.sort((a, b) => a.projectName.localeCompare(b.projectName));
+              createList(shownProjectItems, page, itemsPerPage);
+              search(projectItems);
+            })
           }
         };
       });
