@@ -364,9 +364,10 @@
         position: absolute;
         display: flex;
         flex-flow: column wrap;
-        justify-content: center;
+        padding: 200px 0;
+        /* justify-content: center; */
         align-items: center;
-        background-color: rgba(211, 211, 211, 0.172);
+        z-index: 1;
       }
 
       .loader {
@@ -400,7 +401,7 @@
       }
 
       .hidden {
-        animation: fade-out ease 1s;
+        animation: fade-out ease 0.5s;
       }
 
       @keyframes lds-dual-ring {
@@ -545,8 +546,9 @@
               </label>
               <div class="info-card">
               Use this search tool to find nearby projects or locate projects via
-              their name.<br /><br />Search by proximity -> enter an address,
-              city, or zip code, and enter a radius<br /><br />Search by project
+              their name.
+              <br /><br />Search by proximity -> enter a zip code, city, or an address and enter a radius
+              <br /><br />Search by project
               name -> begin typing the project name in the search field
               </div>
           </div>
@@ -851,7 +853,7 @@
         loader.classList.add("hidden");
         setTimeout(function() {
           loader.style.display = "none";
-        }, 1000)
+        }, 500)
 
         const list_items = list.getElementsByClassName("project-entry");
         Array.from(list_items)
@@ -877,7 +879,7 @@
           countries: "us",
           proximity: [-121.898395, 37.322972],
           localGeocoder: forwardGeocoder /*  */,
-          placeholder: "Search by city, project name",
+          placeholder: "By zip code, city, address, project name",
         });
 
         const search_bar = document.getElementById("geocoder");
