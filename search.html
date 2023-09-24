@@ -595,7 +595,12 @@
             .then((res) => res.json())
             .then((data) => {
               projectItems.push(...data.items);
-              shownProjectItems = projectItems.slice();
+              return projectItems;
+            }).then(projects => {
+              Promise.all(projects.map(proj => getCoordinates(proj).then(coords => proj.coords = coords)))
+              return projects;
+            }).then(projects => {
+              shownProjectItems = projects.slice();
               createList(shownProjectItems, page, itemsPerPage);
               search(projectItems);
             });
@@ -1043,21 +1048,30 @@
 
         let count = 0;
         console.log(projectItems[0])
+
+        for (const proj of projectItems) {
+          const name = proj["projectName"];
+          const coords = proj.coords;
+          const project_type = proj['detailProjectType(Check all that apply)'];
+          const project_status = proj.currentStatus;
+          console.log(name, coords, project_type, project_status)
+        }
+
         for (i = 0; i < list_items.length; i++) {
           const name =
             list_items[i].getElementsByClassName("project-name")[0].innerText;
           const coords = list_items[i]
             .getElementsByClassName("project-coordinates")[0]
             .innerText.split(",");
-          const project_type =
+            const project_type =
             list_items[i].getElementsByClassName("project-type")[0].innerText;
-          const project_status =
+            const project_status =
             list_items[i].getElementsByClassName("project-status")[0].innerText;
-
+            
           const distance = find_distance(result, coords);
 
           const distance_rounded = Math.round(distance * 10) / 10;
-
+          console.log(type)
           if (name.includes(search_result)) {
             count += 1;
           } else if (
