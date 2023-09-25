@@ -671,21 +671,21 @@
           page--;
           createList(shownProjectItems, page, itemsPerPage);
           window.scrollTo(0, 0);
-          window.parent.postMessage("scroll");
+          window.parent.postMessage("scroll", "https://alexshoor.wixsite.com");
         })
 
         btnFirst.addEventListener('click', () => {
           page = 1;
           createList(shownProjectItems, page, itemsPerPage);
           window.scrollTo(0, 0);
-          window.parent.postMessage("scroll");
+          window.parent.postMessage("scroll", "https://alexshoor.wixsite.com");
         })
 
         btnLast.addEventListener('click', () => {
           page = lastPage;
           createList(shownProjectItems, page, itemsPerPage);
           window.scrollTo(0, 0);
-          window.parent.postMessage("scroll");
+          window.parent.postMessage("scroll", "https://alexshoor.wixsite.com");
         })
 
         btnRight.addEventListener('click', () => {
@@ -693,7 +693,7 @@
           page++;
           createList(shownProjectItems, page, itemsPerPage)
           window.scrollTo(0, 0);
-          window.parent.postMessage("scroll");
+          window.parent.postMessage("scroll", "https://alexshoor.wixsite.com");
         })
       }
 
