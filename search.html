@@ -671,18 +671,21 @@
           page--;
           createList(shownProjectItems, page, itemsPerPage);
           window.scrollTo(0, 0);
+          window.parent.postMessage("scroll");
         })
 
         btnFirst.addEventListener('click', () => {
           page = 1;
           createList(shownProjectItems, page, itemsPerPage);
           window.scrollTo(0, 0);
+          window.parent.postMessage("scroll");
         })
 
         btnLast.addEventListener('click', () => {
           page = lastPage;
           createList(shownProjectItems, page, itemsPerPage);
           window.scrollTo(0, 0);
+          window.parent.postMessage("scroll");
         })
 
         btnRight.addEventListener('click', () => {
@@ -690,6 +693,7 @@
           page++;
           createList(shownProjectItems, page, itemsPerPage)
           window.scrollTo(0, 0);
+          window.parent.postMessage("scroll");
         })
       }
 
