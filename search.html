@@ -145,7 +145,7 @@
       .project-link {
         text-decoration: none;
         color: black;
-        background-color: #F26440;
+        background-color: #f26440;
         padding: 7px 30px;
         border-radius: 50px;
         color: white;
@@ -168,7 +168,7 @@
       .project-entry {
         position: relative;
         margin: 15px 5px;
-        max-width: calc((980px - 30px)/3);
+        max-width: calc((980px - 30px) / 3);
         display: flex;
         flex-flow: column wrap;
         text-align: left;
@@ -216,7 +216,7 @@
         text-align: center;
         padding: 7px 30px;
         border-radius: 50px;
-        background-color: #F26440;
+        background-color: #f26440;
         border: unset;
         color: white;
         cursor: pointer;
@@ -293,7 +293,7 @@
         flex-flow: column nowrap;
         min-height: 200px;
       }
-      
+
       .project-bottom-container {
         display: flex;
         flex-flow: column nowrap;
@@ -346,7 +346,7 @@
       }
 
       .info-icon {
-        fill: #F26440;
+        fill: #f26440;
       }
 
       .info-check {
@@ -435,34 +435,34 @@
       }
 
       @keyframes lds-dual-ring {
-      0% {
-        transform: rotate(0deg);
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
       }
-      100% {
-        transform: rotate(360deg);
-      }
-    }
 
-    @keyframes fade-in-out {
-      0% {
-        opacity: 1;
+      @keyframes fade-in-out {
+        0% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0;
+        }
+        100% {
+          opacity: 1;
+        }
       }
-      50% {
-        opacity: 0;
-      }
-      100% {
-        opacity: 1;
-      }
-    }
 
-    @keyframes fade-out {
-      0% {
-        opacity: 1;
+      @keyframes fade-out {
+        0% {
+          opacity: 1;
+        }
+        100% {
+          opacity: 0;
+        }
       }
-      100% {
-        opacity: 0;
-      }
-    }
     </style>
   </head>
 
@@ -470,100 +470,99 @@
     <div class="load-wrapper">
       <h3 class="loader-title">SHAPE <strong>SV</strong></h3>
       <div class="loader"></div>
-      <p class="loading-text">
-        Loading
-      </p>
+      <p class="loading-text">Loading</p>
     </div>
-      <section class="search-container">
-        <div class="search-menu">
-          <div class="search-filter">
-            <div id="geocoder"></div>
-          </div>
-          <div class="search-filter">
-            <select
-              class="search-select"
-              id="radius"
-              name="radius"
-              disabled
-            ></select>
-          </div>
-          <div class="search-filter">
-            <select class="search-select" id="type" name="type"></select>
-          </div>
-          <div class="search-filter">
-            <select class="search-select" id="status" name="status"></select>
-          </div>
-          <div class="flex-break"></div>
-          <div class="user-buttons">
-            <button
-              class="submit-button"
-              id="submit-button"
-              onclick="searchQuery()"
+    <section class="search-container">
+      <div class="search-menu">
+        <div class="search-filter">
+          <div id="geocoder"></div>
+        </div>
+        <div class="search-filter">
+          <select
+            class="search-select"
+            id="radius"
+            name="radius"
+            disabled
+          ></select>
+        </div>
+        <div class="search-filter">
+          <select class="search-select" id="type" name="type"></select>
+        </div>
+        <div class="search-filter">
+          <select class="search-select" id="status" name="status"></select>
+        </div>
+        <div class="flex-break"></div>
+        <div class="user-buttons">
+          <button
+            class="submit-button"
+            id="submit-button"
+            onclick="searchQuery()"
+          >
+            Search
+          </button>
+          <button
+            class="clear-filters"
+            id="clear-filters"
+            onclick="restore_list()"
+          >
+            <svg
+              width="12px"
+              height="12px"
+              viewBox="0 0 64 64"
+              xmlns="http://www.w3.org/2000/svg"
+              stroke-width="3"
+              stroke="#000000"
+              fill="none"
             >
-              Search
-            </button>
-            <button
-              class="clear-filters"
-              id="clear-filters"
-              onclick="restore_list()"
+              <path d="M53.72,36.61A21.91,21.91,0,1,1,50.37,20.1" />
+              <polyline points="51.72 7.85 50.85 20.78 37.92 19.9" />
+              <path d="M53.72,36.61A21.91,21.91,0,1,1,50.37,20.1" />
+              <polyline points="51.72 7.85 50.85 20.78 37.92 19.9" />
+            </svg>
+            <span class="clear-filters-text" id="clear-filters-text"
+              >clear all filters</span
             >
-              <svg
-                width="12px"
-                height="12px"
-                viewBox="0 0 64 64"
-                xmlns="http://www.w3.org/2000/svg"
-                stroke-width="3"
-                stroke="#000000"
-                fill="none"
-              >
-                <path d="M53.72,36.61A21.91,21.91,0,1,1,50.37,20.1" />
-                <polyline points="51.72 7.85 50.85 20.78 37.92 19.9" />
-                <path d="M53.72,36.61A21.91,21.91,0,1,1,50.37,20.1" />
-                <polyline points="51.72 7.85 50.85 20.78 37.92 19.9" />
-              </svg>
-              <span class="clear-filters-text" id="clear-filters-text"
-                >clear all filters</span
-              >
-            </button>
-          </div>
-          <div class="info-hover">
-            <input class="info-input" id="info-check" type="checkbox">
-            <label class="info-check" for="info-check">
-              <svg class="info-svg"
+          </button>
+        </div>
+        <div class="info-hover">
+          <input class="info-input" id="info-check" type="checkbox" />
+          <label class="info-check" for="info-check">
+            <svg
+              class="info-svg"
               height="25px"
               width="25px"
               viewBox="0 0 24 24"
               fill="none"
               xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  class="info-icon"
-                  fill-rule="evenodd"
-                  clip-rule="evenodd"
-                  d="M22 12C22 17.5228 17.5228 22 12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12ZM12 17.75C12.4142 17.75 12.75 17.4142 12.75 17V11C12.75 10.5858 12.4142 10.25 12 10.25C11.5858 10.25 11.25 10.5858 11.25 11V17C11.25 17.4142 11.5858 17.75 12 17.75ZM12 7C12.5523 7 13 7.44772 13 8C13 8.55228 12.5523 9 12 9C11.4477 9 11 8.55228 11 8C11 7.44772 11.4477 7 12 7Z"
-                  fill="#1C274C"
-                />
-              </svg>
-            </label>
-            <div class="info-card">
+            >
+              <path
+                class="info-icon"
+                fill-rule="evenodd"
+                clip-rule="evenodd"
+                d="M22 12C22 17.5228 17.5228 22 12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12ZM12 17.75C12.4142 17.75 12.75 17.4142 12.75 17V11C12.75 10.5858 12.4142 10.25 12 10.25C11.5858 10.25 11.25 10.5858 11.25 11V17C11.25 17.4142 11.5858 17.75 12 17.75ZM12 7C12.5523 7 13 7.44772 13 8C13 8.55228 12.5523 9 12 9C11.4477 9 11 8.55228 11 8C11 7.44772 11.4477 7 12 7Z"
+                fill="#1C274C"
+              />
+            </svg>
+          </label>
+          <div class="info-card">
             Use this search tool to find nearby projects or locate projects via
             their name.
-            <br /><br />Search by proximity -> enter a zip code, city, or an address and enter a radius
-            <br /><br />Search by project
-            name -> begin typing the project name in the search field
-            </div>
-        </div>
-        </div>
-        <div class="error-container">
-          <div class="error-msg" id="search-error">
-            Please enter an address/project name
+            <br /><br />Search by proximity -> enter a zip code, city, or an
+            address and enter a radius <br /><br />Search by project name ->
+            begin typing the project name in the search field
           </div>
-          <div class="error-msg" id="radius-error">Please enter a radius</div>
         </div>
-        <div class="info-container">
-          <div class="results" id="results"></div>
+      </div>
+      <div class="error-container">
+        <div class="error-msg" id="search-error">
+          Please enter an address/project name
         </div>
-      </section>
+        <div class="error-msg" id="radius-error">Please enter a radius</div>
+      </div>
+      <div class="info-container">
+        <div class="results" id="results"></div>
+      </div>
+    </section>
     <script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v5.0.0/mapbox-gl-geocoder.min.js"></script>
 
     <script>
@@ -606,16 +605,19 @@
 
       function getFullImageURL(imageSrc) {
         let strReturnImage = "";
+        if (!imageSrc) {
+          return strReturnImage;
+        }
         if (imageSrc.startsWith("wix:image:")) {
           let wixImageURL = "";
           wixImageURL = "https://static.wixstatic.com/media/";
           let wixLocalURL = "";
-          wixLocalURL = imageSrc.replace('wix:image://v1/', '');
-          wixLocalURL = wixLocalURL.substr(0, wixLocalURL.lastIndexOf('/'));
+          wixLocalURL = imageSrc.replace("wix:image://v1/", "");
+          wixLocalURL = wixLocalURL.substr(0, wixLocalURL.lastIndexOf("/"));
           strReturnImage = wixImageURL + wixLocalURL;
         } else {
-              strReturnImage = imageSrc;
-           }
+          strReturnImage = imageSrc;
+        }
         return strReturnImage;
       }
 
@@ -637,7 +639,9 @@
             current_project["detailProjectType(Check all that apply)"];
           const project_status = current_project.currentStatus;
           const project_city = current_project.city;
-          const project_link = "https://www.shapesv.org" + current_project["link-shapesvalpha-projectName"];
+          const project_link =
+            "https://www.shapesv.org" +
+            current_project["link-shapesvalpha-projectName"];
           const project_numFeedbacks =
             current_project["numberofFeedbacks(Internal)"];
           const project_desc = current_project.overviewParagraph1;
@@ -753,9 +757,9 @@
         info_container.after(list);
         const loader = document.querySelector(".load-wrapper");
         loader.classList.add("hidden");
-        setTimeout(function() {
+        setTimeout(function () {
           loader.style.display = "none";
-        }, 500)
+        }, 500);
 
         const list_items = list.getElementsByClassName("project-entry");
         Array.from(list_items)
@@ -787,7 +791,9 @@
         // Add geocoder result to container.
         geocoder.addTo(search_bar);
 
-        const search_input = search_bar.querySelector('.mapboxgl-ctrl-geocoder--input');
+        const search_input = search_bar.querySelector(
+          ".mapboxgl-ctrl-geocoder--input"
+        );
         let search_enabled = false;
         let address_coords = [0, 0];
 
@@ -797,7 +803,7 @@
         let radius_options = `<option value="" disabled selected>Radius</option>`;
         radius_values.forEach((val, i) => {
           radius_options += `<option value="${val}">${val} mi</option>`;
-        })
+        });
         radius.innerHTML += radius_options;
 
         // Method to iterate through each project type and add to type dropdown
@@ -805,29 +811,29 @@
         items.forEach((item, i) => {
           let typeArray = item["detailProjectType(Check all that apply)"];
           for (let i = 0; i < typeArray.length; i++) {
-            if(uniqueTypes.indexOf(typeArray[i]) === -1) {
+            if (uniqueTypes.indexOf(typeArray[i]) === -1) {
               uniqueTypes.push(typeArray[i]);
             }
           }
-        })
+        });
         let type_options = `<option value="All" selected>Type</option>`;
         uniqueTypes.forEach((type, i) => {
           type_options += `<option value="${type}">${type}</option>`;
-        })
+        });
         const type = document.getElementById("type");
         type.innerHTML += type_options;
 
         // Method to iterate through each project status and add to status dropdown
         let uniqueStatus = ["All"];
         items.forEach((item, i) => {
-          if(uniqueStatus.indexOf(item["currentStatus"]) === -1) {
+          if (uniqueStatus.indexOf(item["currentStatus"]) === -1) {
             uniqueStatus.push(item["currentStatus"]);
           }
-        })
+        });
         let status_options = `<option value="All" selected>Status</option>`;
         uniqueStatus.forEach((status, i) => {
           status_options += `<option value="${status}">${status}</option>`;
-        })
+        });
         const status = document.getElementById("status");
         status.innerHTML += status_options;
 
@@ -1138,8 +1144,7 @@
 
         if (checkFilled() && !isProject) {
           update_list();
-        }
-        else if (isProject) {
+        } else if (isProject) {
           clearErrMsg();
           update_list();
         }
