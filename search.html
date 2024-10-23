@@ -109,8 +109,10 @@
 
       .project-img {
         max-height: 180px;
+        min-height: 180px;
         object-fit: cover;
         width: 100%;
+        border: unset;
       }
 
       .project-desc {
@@ -252,6 +254,9 @@
         .info-svg {
           height: 35px;
           width: 35px;
+        }
+        .project-list {
+          justify-content: center;
         }
       }
 
@@ -606,7 +611,7 @@
       function getFullImageURL(imageSrc) {
         let strReturnImage = "";
         if (!imageSrc) {
-          return strReturnImage;
+          return "https://upload.wikimedia.org/wikipedia/commons/d/d1/Image_not_available.png";
         }
         if (imageSrc.startsWith("wix:image:")) {
           let wixImageURL = "";
